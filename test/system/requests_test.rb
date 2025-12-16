@@ -31,10 +31,11 @@ class RequestsTest < ApplicationSystemTestCase
     fill_in "request_title", with: "Need help with moving furniture"
     select @category.name, from: "request_category_id"
     fill_in "request_description", with: "I need someone to help me move a couch and a table to my new apartment."
-    select "Almaty", from: "request_region"
-    fill_in "request_city", with: "Almaty"
+    select I18n.t("regions.almaty", locale: :ru), from: "request_region"
+    # Use find and set to ensure the city field is properly filled
+    find("#request_city").set("Almaty")
 
-    click_button I18n.t("requests.new.create")
+    click_button I18n.t("requests.new.create", locale: :ru)
 
     assert_text "Need help with moving furniture"
   end
@@ -44,10 +45,20 @@ class RequestsTest < ApplicationSystemTestCase
 
     visit edit_request_path(id: @request.id, locale: :ru)
 
-    fill_in "request_title", with: "Updated request title here"
+    # Clear and fill in the title field using native method
+    title_field = find("#request_title")
+    title_field.fill_in(with: "Updated request title here")
+
+    # Select required fields
+    select @category.name, from: "request_category_id"
+    select I18n.t("regions.almaty", locale: :ru), from: "request_region"
+    find("#request_city").set("Almaty")
+
+    # Click the submit button
     click_button "Update Request"
 
-    assert_text "Updated request title here"
+    # Verify the update was successful
+    assert_text "Updated request title here", wait: 10
   end
 
   test "user sees delete button on their own open request" do
