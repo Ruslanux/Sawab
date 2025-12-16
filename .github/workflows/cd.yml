@@ -57,31 +57,30 @@ jobs:
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           SAWAB_DATABASE_PASSWORD: ${{ secrets.SAWAB_DATABASE_PASSWORD }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
           gem install kamal
 
-          # Check if app is already deployed by looking for containers
-          if ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "docker ps | grep -q sawab-web" 2>/dev/null; then
-            echo "App already deployed, running normal deploy..."
+          # Check if app is already deployed
+          if ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker ps --format '{{.Names}}' | grep -q sawab-web" 2>/dev/null; then
+            echo "=== App already deployed, running normal deploy ==="
             kamal deploy
           else
-            echo "First deployment detected, running kamal setup..."
-            # Build and push image, then boot accessories and app
+            echo "=== First deployment detected ==="
+
+            echo "Step 1: Building and pushing image..."
             kamal build push
-            kamal accessory boot db || echo "DB accessory already running"
 
-            # Run migrations directly on server using docker run
-            ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "
-              docker run --rm --network kamal \
-                -e DATABASE_URL='postgres://sawab:${{ secrets.SAWAB_DATABASE_PASSWORD }}@sawab-db:5432/sawab_production?sslmode=disable' \
-                -e RAILS_MASTER_KEY='${{ secrets.RAILS_MASTER_KEY }}' \
-                -e RAILS_ENV=production \
-                -e SOLID_QUEUE_IN_PUMA=false \
-                ruslanux/sawab:latest \
-                bin/rails db:prepare
-            "
+            echo "Step 2: Booting database accessory..."
+            kamal accessory boot db || echo "DB already running"
 
-            # Now deploy the app
+            echo "Step 3: Pulling image on server..."
+            ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker pull ruslanux/sawab:latest"
+
+            echo "Step 4: Running database migrations..."
+            ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker run --rm --network kamal -e DATABASE_URL='postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production?sslmode=disable' -e RAILS_MASTER_KEY='${RAILS_MASTER_KEY}' -e RAILS_ENV=production -e SOLID_QUEUE_IN_PUMA=false ruslanux/sawab:latest bin/rails db:prepare"
+
+            echo "Step 5: Deploying application..."
             kamal deploy --skip-push
           fi
 
