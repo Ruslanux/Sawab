@@ -56,7 +56,8 @@ env:
     # ============================================
     # Use the container name for docker network communication
     DB_HOST: sawab-db
-    DATABASE_URL: "postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production"
+    # Disable SSL since the postgres container doesn't have SSL configured
+    DATABASE_URL: "postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production?sslmode=disable"
 
     # ============================================
     # EMAIL SETTINGS
