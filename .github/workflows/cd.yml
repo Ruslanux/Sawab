@@ -60,15 +60,30 @@ jobs:
         run: |
           gem install kamal
 
-          # Build and push the image first
-          kamal build push
+          # Check if app is already deployed by looking for containers
+          if ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "docker ps | grep -q sawab-web" 2>/dev/null; then
+            echo "App already deployed, running normal deploy..."
+            kamal deploy
+          else
+            echo "First deployment detected, running kamal setup..."
+            # Build and push image, then boot accessories and app
+            kamal build push
+            kamal accessory boot db || echo "DB accessory already running"
 
-          # Run database migrations using a one-off container
-          # This handles first deployment when tables don't exist yet
-          kamal app exec "bin/rails db:prepare" || echo "Migration command returned non-zero, continuing..."
+            # Run migrations directly on server using docker run
+            ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "
+              docker run --rm --network kamal \
+                -e DATABASE_URL='postgres://sawab:${{ secrets.SAWAB_DATABASE_PASSWORD }}@sawab-db:5432/sawab_production?sslmode=disable' \
+                -e RAILS_MASTER_KEY='${{ secrets.RAILS_MASTER_KEY }}' \
+                -e RAILS_ENV=production \
+                -e SOLID_QUEUE_IN_PUMA=false \
+                ruslanux/sawab:latest \
+                bin/rails db:prepare
+            "
 
-          # Deploy the application (skip push since we already did it)
-          kamal deploy --skip-push
+            # Now deploy the app
+            kamal deploy --skip-push
+          fi
 
       - name: Notify on failure
         if: failure()
