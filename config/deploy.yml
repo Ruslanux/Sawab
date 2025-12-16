@@ -5,13 +5,9 @@ service: sawab
 image: ruslanux/sawab
 
 # Deploy to these servers.
-# TODO: Replace with your server IP address(es)
 servers:
   web:
-    - 192.168.0.1
-    # Add more servers for horizontal scaling:
-    # - 192.168.0.2
-    # - 192.168.0.3
+    - 65.108.56.69
 
   # Uncomment to run background jobs on a separate server
   # job:
@@ -58,9 +54,8 @@ env:
     # ============================================
     # DATABASE SETTINGS
     # ============================================
-    # For external database (recommended for production)
-    # TODO: Set your database host
-    # DB_HOST: your-db-host.com
+    DB_HOST: 65.108.56.69
+    DATABASE_URL: "postgres://sawab:${SAWAB_DATABASE_PASSWORD}@65.108.56.69:5432/sawab_production"
 
     # ============================================
     # EMAIL SETTINGS
@@ -73,15 +68,7 @@ env:
     # ============================================
     # STORAGE SETTINGS
     # ============================================
-    # Storage service: amazon, digitalocean, or local
-    STORAGE_SERVICE: amazon
-    # AWS_REGION: eu-central-1
-    # AWS_BUCKET: sawab-production
-
-    # For DigitalOcean Spaces:
-    # STORAGE_SERVICE: digitalocean
-    # DO_SPACES_REGION: fra1
-    # DO_SPACES_BUCKET: sawab
+    STORAGE_SERVICE: local
 
     # ============================================
     # BACKGROUND JOBS
@@ -150,21 +137,16 @@ builder:
 # ============================================
 # ACCESSORIES (optional services)
 # ============================================
-# Uncomment to run PostgreSQL on the same server (not recommended for production)
-# For production, use a managed database service (DigitalOcean Managed Databases, AWS RDS, etc.)
-
-# accessories:
-#   db:
-#     image: postgres:16
-#     host: 192.168.0.1
-#     port: "127.0.0.1:5432:5432"
-#     env:
-#       clear:
-#         POSTGRES_DB: sawab_production
-#         POSTGRES_USER: sawab
-#       secret:
-#         - SAWAB_DATABASE_PASSWORD
-#     directories:
-#       - data:/var/lib/postgresql/data
-#     files:
-#       - config/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+accessories:
+  db:
+    image: postgres:16
+    host: 65.108.56.69
+    port: "127.0.0.1:5432:5432"
+    env:
+      clear:
+        POSTGRES_DB: sawab_production
+        POSTGRES_USER: sawab
+      secret:
+        - SAWAB_DATABASE_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
