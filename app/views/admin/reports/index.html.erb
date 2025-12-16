@@ -1,0 +1,284 @@
+<!-- Filters -->
+<div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6">
+  <div class="px-6 py-4">
+    <%= form_with url: admin_reports_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Status Filter -->
+        <div>
+          <%= f.select :status,
+              options_for_select([
+                ['All Status', ''],
+                ['Pending', 'pending'],
+                ['Investigating', 'investigating'],
+                ['Resolved', 'resolved'],
+                ['Dismissed', 'dismissed']
+              ], params[:status]),
+              {},
+              class: "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" %>
+        </div>
+
+        <!-- Type Filter -->
+        <div>
+          <%= f.select :type,
+              options_for_select([
+                ['All Types', ''],
+                ['Spam', 'spam'],
+                ['Inappropriate', 'inappropriate'],
+                ['Fraud', 'fraud'],
+                ['Other', 'other']
+              ], params[:type]),
+              {},
+              class: "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" %>
+        </div>
+
+        <!-- Apply Button -->
+        <div>
+          <%= f.submit "Apply Filters", class: "w-full px-4 py-2 text-sm text-white bg-indigo-600 dark:bg-indigo-700 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600" %>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-600 dark:text-gray-400">
+          Total: <strong><%= @reports.total_count %></strong> reports
+          <% if params[:status].present? %>
+            • <span class="font-medium"><%= params[:status].humanize %></span>
+          <% end %>
+        </div>
+        <%= link_to "Reset", admin_reports_path, class: "px-4 py-2 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  <div class="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 bg-yellow-500 dark:bg-yellow-600 rounded-md p-2">
+        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">Pending</p>
+        <p class="text-2xl font-bold text-yellow-900 dark:text-yellow-200"><%= Report.pending.count %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 bg-blue-500 dark:bg-blue-600 rounded-md p-2">
+        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm font-medium text-blue-800 dark:text-blue-300">Investigating</p>
+        <p class="text-2xl font-bold text-blue-900 dark:text-blue-200"><%= Report.investigating.count %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 bg-green-500 dark:bg-green-600 rounded-md p-2">
+        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm font-medium text-green-800 dark:text-green-300">Resolved</p>
+        <p class="text-2xl font-bold text-green-900 dark:text-green-200"><%= Report.resolved.count %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 bg-gray-500 dark:bg-gray-600 rounded-md p-2">
+        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm font-medium text-gray-800 dark:text-gray-300">Dismissed</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= Report.dismissed.count %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reports List -->
+<div class="space-y-4">
+  <% @reports.each do |report| %>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg hover:shadow-md transition-shadow">
+      <div class="px-6 py-5">
+        <div class="flex items-start justify-between">
+          <div class="flex-1 min-w-0">
+            <!-- Report Header -->
+            <div class="flex items-center space-x-3 mb-3">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium <%=
+                case report.status
+                when 'pending' then 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                when 'investigating' then 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+                when 'resolved' then 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                when 'dismissed' then 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                end
+              %>">
+                <%= report.status.humanize %>
+              </span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
+                <%= report.report_type.humanize %>
+              </span>
+              <span class="text-sm text-gray-500 dark:text-gray-400">
+                <%= time_ago_in_words(report.created_at) %> ago
+              </span>
+            </div>
+
+            <!-- Reporter Info -->
+            <div class="flex items-center space-x-2 mb-2">
+              <svg class="h-4 w-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                Reported by
+                <%= link_to report.reporter.username, admin_user_path(report.reporter), class: "font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300" %>
+              </span>
+              <% if report.reported_user %>
+                <span class="text-sm text-gray-600 dark:text-gray-400">against</span>
+                <%= link_to report.reported_user.username, admin_user_path(report.reported_user), class: "font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300" %>
+              <% end %>
+            </div>
+
+            <!-- Reportable Info -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-3">
+              <div class="flex items-center space-x-2 mb-2">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <%= report.reportable_type %>
+                </span>
+                <% if report.reportable %>
+                  <% if report.reportable_type == 'Request' %>
+                    <%= link_to request_path(report.reportable), class: "text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300" do %>
+                      <%= report.reportable.title %>
+                    <% end %>
+                  <% elsif report.reportable_type == 'Offer' %>
+                    <%= link_to request_path(report.reportable.request), class: "text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300" do %>
+                      Offer on: <%= report.reportable.request.title %>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <span class="text-sm text-red-600 dark:text-red-400">(Deleted)</span>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Report Reason -->
+            <div class="mb-3">
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reason:</p>
+              <p class="text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                <%= report.reason %>
+              </p>
+            </div>
+
+            <!-- Resolution Info -->
+            <% if report.resolved? || report.dismissed? %>
+              <div class="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3">
+                <div class="flex items-center space-x-2 mb-2">
+                  <svg class="h-4 w-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-sm text-gray-600 dark:text-gray-400">
+                    <%= report.resolved? ? 'Resolved' : 'Dismissed' %> by
+                    <%= link_to report.resolver.username, admin_user_path(report.resolver), class: "font-medium text-indigo-600 dark:text-indigo-400" %>
+                  </span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">
+                    <%= time_ago_in_words(report.resolved_at) %> ago
+                  </span>
+                </div>
+                <% if report.resolution_note.present? %>
+                  <p class="text-sm text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-2 mt-2">
+                    <span class="font-medium">Note:</span> <%= report.resolution_note %>
+                  </p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Actions -->
+          <div class="ml-4 flex-shrink-0">
+            <%= link_to admin_report_path(report),
+                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600" do %>
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Review
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Quick Actions for Pending Reports -->
+        <% if report.pending? && current_user.admin? %>
+          <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center space-x-3">
+            <%= button_to "Start Investigation", investigate_admin_report_path(report),
+                method: :patch,
+                class: "inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50" %>
+
+            <%= form_with url: dismiss_admin_report_path(report), method: :patch, class: "inline-flex" do |f| %>
+              <%= f.hidden_field :resolution_note, value: "Quick dismissed from list view" %>
+              <%= f.submit "Quick Dismiss",
+                  data: { confirm: "Are you sure you want to dismiss this report?" },
+                  class: "px-3 py-1.5 text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Pagination -->
+<% if @reports.total_pages > 1 %>
+  <div class="mt-6 flex items-center justify-between">
+    <div class="text-sm text-gray-700 dark:text-gray-300">
+      Showing
+      <span class="font-medium"><%= @reports.offset_value + 1 %></span>
+      to
+      <span class="font-medium"><%= [@reports.offset_value + @reports.limit_value, @reports.total_count].min %></span>
+      of
+      <span class="font-medium"><%= @reports.total_count %></span>
+      reports
+    </div>
+    <div class="flex space-x-2">
+      <%= link_to_unless @reports.first_page?, "First", admin_reports_path(page: 1, status: params[:status], type: params[:type]), class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 #{'opacity-50 cursor-not-allowed' if @reports.first_page?}" %>
+
+      <%= link_to_unless @reports.first_page?, "Previous", admin_reports_path(page: @reports.current_page - 1, status: params[:status], type: params[:type]), class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 #{'opacity-50 cursor-not-allowed' if @reports.first_page?}" %>
+
+      <span class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 dark:bg-indigo-700 border border-indigo-600 dark:border-indigo-700 rounded-lg">
+        <%= @reports.current_page %>
+      </span>
+
+      <%= link_to_unless @reports.last_page?, "Next", admin_reports_path(page: @reports.current_page + 1, status: params[:status], type: params[:type]), class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 #{'opacity-50 cursor-not-allowed' if @reports.last_page?}" %>
+
+      <%= link_to_unless @reports.last_page?, "Last", admin_reports_path(page: @reports.total_pages, status: params[:status], type: params[:type]), class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 #{'opacity-50 cursor-not-allowed' if @reports.last_page?}" %>
+    </div>
+  </div>
+<% end %>
+
+<!-- Empty State -->
+<% if @reports.empty? %>
+  <div class="text-center py-12 bg-white dark:bg-gray-800 shadow rounded-lg">
+    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No reports found</h3>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <% if params[:status].present? %>
+        Try adjusting your filters to see more results.
+      <% else %>
+        Great! There are no reports to review.
+      <% end %>
+    </p>
+  </div>
+<% end %>

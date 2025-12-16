@@ -1,0 +1,29 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "52a31475fe3b2881f417f1f885e801c87de09f78169d66797d654f83535e69dc",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/admin/users_controller.rb",
+      "line": 165,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:user).permit(:role, :sawab_balance)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::UsersController",
+        "method": "sensitive_user_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": "This is intentionally safe: sensitive parameters (:role, :sawab_balance) are protected by multiple layers of authorization: 1) require_admin! before_action, 2) authorize_role_change! before_action for role changes, 3) Only merged in update action when current_user.admin?, 4) Prevention of self-modification. See controller documentation for details."
+    }
+  ],
+  "updated": "2025-11-25 00:45:00 +0500",
+  "brakeman_version": "7.1.0"
+}

@@ -1,0 +1,110 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-2">
+        <%= link_to institution_path(@institution), class: "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        <% end %>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          <%= t('institution_members.index.title') %>
+        </h1>
+      </div>
+      <p class="text-gray-600 dark:text-gray-400">
+        <%= @institution.name %>
+      </p>
+    </div>
+
+    <!-- Add Member Form -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700 mb-6">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+        <%= t('institution_members.index.add_member') %>
+      </h2>
+
+      <%= form_with model: [@institution, InstitutionMember.new], local: true, class: "space-y-4" do |f| %>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <%= f.label :user_id, t('institution_members.form.user'), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :user_id,
+                class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white",
+                placeholder: t('institution_members.form.user_id_placeholder') %>
+          </div>
+
+          <div>
+            <%= f.label :role, t('institution_members.form.role'), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :role,
+                InstitutionMember.roles.keys.map { |role| [t("institution_members.roles.#{role}"), role] },
+                {},
+                class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white" %>
+          </div>
+
+          <div>
+            <%= f.label :position, t('institution_members.form.position'), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :position,
+                class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white",
+                placeholder: t('institution_members.form.position_placeholder') %>
+          </div>
+        </div>
+
+        <%= f.submit t('institution_members.form.add'),
+            class: "px-6 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition cursor-pointer" %>
+      <% end %>
+    </div>
+
+    <!-- Members List -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <%= t('institution_members.index.current_members') %> (<%= @members.count %>)
+        </h2>
+      </div>
+
+      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @members.each do |member| %>
+          <div class="p-6 flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-lg mr-4">
+                <%= member.user.username[0].upcase %>
+              </div>
+              <div>
+                <%= link_to user_path(username: member.user.username), class: "text-lg font-medium text-gray-900 dark:text-gray-100 hover:text-emerald-600 dark:hover:text-emerald-400" do %>
+                  <%= member.user.username %>
+                <% end %>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    <%= case member.role
+                        when 'admin' then 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                        when 'representative' then 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                        else 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                        end %>">
+                    <%= t("institution_members.roles.#{member.role}") %>
+                  </span>
+                  <% if member.position.present? %>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                      <%= member.position %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <% if member.user != current_user || @members.admins.count > 1 %>
+                <%= button_to institution_institution_member_path(@institution, member),
+                    method: :delete,
+                    form: { data: { turbo_confirm: t('institution_members.confirm_remove') } },
+                    class: "p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition" do %>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

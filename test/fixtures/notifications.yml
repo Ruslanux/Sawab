@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  recipient: one
+  actor: two
+  notifiable: one (Request)
+  action: new_offer
+  read_at: 2025-11-02 17:13:11
+
+two:
+  recipient: two
+  actor: one
+  notifiable: one (Offer)
+  action: offer_accepted
+  read_at: nil

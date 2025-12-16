@@ -1,0 +1,402 @@
+<div class="space-y-6">
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+    <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 h-16 w-16 rounded-full <%= @user.banned_at ? 'bg-red-600' : 'bg-indigo-600' %> flex items-center justify-center">
+            <span class="text-white font-bold text-2xl"><%= @user.username[0].upcase %></span>
+          </div>
+          <div class="ml-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              <%= @user.username %>
+              <% if @user.banned_at %>
+                <span class="ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
+                  Banned
+                </span>
+              <% end %>
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400"><%= @user.email %></p>
+          </div>
+        </div>
+        <%= link_to "Back to Users", admin_users_path, class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300" %>
+      </div>
+    </div>
+
+    <div class="px-6 py-5">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3">
+        <div>
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Role</dt>
+          <dd class="mt-1">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%=
+              case @user.role
+              when 'admin' then 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300'
+              when 'moderator' then 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+              else 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+              end
+            %>">
+              <%= @user.role.humanize %>
+            </span>
+          </dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Sawab Balance</dt>
+          <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-gray-100"><%= @user.sawab_balance %></dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Member Since</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100"><%= @user.created_at.strftime('%B %d, %Y') %></dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Sign In</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+            <% if @user.last_sign_in_at %>
+              <%= time_ago_in_words(@user.last_sign_in_at) %> ago
+            <% else %>
+              Never
+            <% end %>
+          </dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Sign In Count</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100"><%= @user.sign_in_count || 0 %> times</dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Location</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100"><%= @user.location.presence || 'Not specified' %></dd>
+        </div>
+
+        <% if @user.banned_at %>
+          <div class="sm:col-span-3">
+            <dt class="text-sm font-medium text-red-500 dark:text-red-400">Ban Reason</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100"><%= @user.banned_reason %></dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <% if current_user.admin? %>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Admin Actions</h3>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+          <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Adjust Sawab Balance</h4>
+          <%= form_with url: adjust_sawab_admin_user_path(@user), method: :post, class: "flex items-end space-x-3" do |f| %>
+            <div class="flex-1">
+              <%= f.number_field :amount,
+                  placeholder: "Amount (use negative for deduction)",
+                  class: "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            </div>
+            <div class="flex-1">
+              <%= f.text_field :reason,
+                  placeholder: "Reason for adjustment",
+                  class: "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            </div>
+            <%= f.submit "Adjust", class: "px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer" %>
+          <% end %>
+        </div>
+
+        <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+          <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Send Private Message</h4>
+
+          <%= form_with(model: [:admin, AdminMessage.new], url: admin_admin_messages_path, local: true, class: "space-y-3") do |f| %>
+            <%= f.hidden_field :recipient_id, value: @user.id %>
+            <%= f.hidden_field :from_user_profile, value: 'true' %>
+
+            <div>
+              <%= f.text_area :body,
+                  rows: 4,
+                  placeholder: "Текст вашего сообщения...",
+                  class: "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            </div>
+            <%= f.submit "Send Message", class: "px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer" %>
+          <% end %>
+        </div>
+
+        <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+          <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">User Status</h4>
+          <% if @user.banned_at %>
+            <%= button_to "Unban User", unban_admin_user_path(@user),
+                 method: :post,
+                 data: { confirm: "Are you sure you want to unban this user?" },
+                 class: "px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
+          <% else %>
+            <%= form_with url: ban_admin_user_path(@user), method: :post, class: "flex items-end space-x-3" do |f| %>
+              <div class="flex-1">
+                <%= f.text_area :reason,
+                    placeholder: "Reason for ban",
+                    rows: 2,
+                    class: "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+              </div>
+              <%= f.submit "Ban User",
+                  data: { confirm: "Are you sure you want to ban this user?" },
+                  class: "px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer" %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div>
+          <%= link_to "Edit User Details", edit_admin_user_path(@user), class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+    <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Award / Revoke Badge</h3>
+    </div>
+
+    <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+      <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Award Custom Badge</h4>
+      <%= form_with(url: admin_user_badges_path, method: :post, class: "flex items-end space-x-3") do |f| %>
+        <%= f.hidden_field :user_id, value: @user.id %>
+
+        <div class="flex-1">
+          <%= f.label :badge_id, "Select Badge", class: "block text-xs font-medium text-gray-700 dark:text-gray-300" %>
+          <%= f.select :badge_id,
+              options_for_select(Badge.all.map { |b| [b.name, b.id] }),
+              { prompt: "Выбери награду..." },
+              class: "mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+        </div>
+
+        <%= f.submit "Award", class: "px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer" %>
+      <% end %>
+    </div>
+
+    <div class="px-6 py-5">
+      <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Current Badges</h4>
+      <% if @user.user_badges.any? %>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% @user.user_badges.includes(:badge).each do |user_badge| %>
+            <li class="py-2 flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <%= image_tag "#{user_badge.badge.icon_name}.svg",
+                    class: "h-8 w-8",
+                    onerror: "this.src='https://placehold.co/32x32/F9E5A7/8B4513?text=B'" %>
+                <div>
+                  <p class="text-sm font-medium text-gray-900 dark:text-gray-100"><%= user_badge.badge.name %></p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    Awarded: <%= time_ago_in_words(user_badge.acquired_at) %> ago
+                  </p>
+                </div>
+              </div>
+              <%= button_to "Revoke",
+                  admin_user_badge_path(user_badge),
+                  method: :delete,
+                  data: { turbo_confirm: "Are you sure you want to revoke this badge?" },
+                  class: "px-3 py-1 text-xs font-medium rounded-md text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-sm text-gray-500 dark:text-gray-400">This user has no badges.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 bg-green-500 dark:bg-green-600 rounded-md p-3">
+          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div class="ml-5">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Requests Created</dt>
+          <dd class="text-2xl font-semibold text-gray-900 dark:text-gray-100"><%= @user.requests.count %></dd>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 bg-yellow-500 dark:bg-yellow-600 rounded-md p-3">
+          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </div>
+        <div class="ml-5">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Offers Made</dt>
+          <dd class="text-2xl font-semibold text-gray-900 dark:text-gray-100"><%= @user.offers.count %></dd>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 bg-red-500 dark:bg-red-600 rounded-md p-3">
+          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div class="ml-5">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Reports Made</dt>
+          <dd class="text-2xl font-semibold text-gray-900 dark:text-gray-100"><%= @reports_created.count %></dd>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+    <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Recent Requests</h3>
+    </div>
+    <% if @user_requests.any? %>
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @user_requests.each do |request| %>
+          <li class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <%= link_to request_path(request), class: "flex items-center justify-between" do %>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 dark:text-gray-100"><%= request.title %></p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  <%= request.category.name %> •
+                  <%= time_ago_in_words(request.created_at) %> ago
+                </p>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%=
+                case request.status
+                when 'open' then 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                when 'in_progress' then 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+                when 'completed' then 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                when 'cancelled' then 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
+                end
+              %>">
+                <%= request.status.humanize %>
+              </span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+        No requests yet
+      </div>
+    <% end %>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+    <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Recent Offers</h3>
+    </div>
+    <% if @user_offers.any? %>
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @user_offers.each do |offer| %>
+          <li class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <%= link_to request_path(offer.request), class: "block" do %>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 dark:text-gray-100"><%= offer.request.title %></p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1"><%= offer.message.truncate(80) %></p>
+                  <p class="text-xs text-gray-400 dark:text-gray-500 mt-1"><%= time_ago_in_words(offer.created_at) %> ago</p>
+                </div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%=
+                  case offer.status
+                  when 'pending' then 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                  when 'accepted' then 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                  when 'rejected' then 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
+                  end
+                %>">
+                  <%= offer.status.humanize %>
+                </span>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+        No offers yet
+      </div>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Reports Created</h3>
+      </div>
+      <% if @reports_created.any? %>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% @reports_created.each do |report| %>
+            <li class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <%= link_to admin_report_path(report), class: "block" do %>
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">
+                      <%= report.report_type.humanize %>
+                    </span>
+                    <p class="text-sm text-gray-900 dark:text-gray-100 mt-1"><%= report.reason.truncate(60) %></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><%= time_ago_in_words(report.created_at) %> ago</p>
+                  </div>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%=
+                    case report.status
+                    when 'pending' then 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                    when 'investigating' then 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+                    when 'resolved' then 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                    when 'dismissed' then 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                    end
+                  %>">
+                    <%= report.status.humanize %>
+                  </span>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+          No reports created
+        </div>
+      <% end %>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Reports Received</h3>
+      </div>
+      <% if @reports_received.any? %>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% @reports_received.each do |report| %>
+            <li class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <%= link_to admin_report_path(report), class: "block" do %>
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
+                      <%= report.report_type.humanize %>
+                    </span>
+                    <p class="text-sm text-gray-900 dark:text-gray-100 mt-1"><%= report.reason.truncate(60) %></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      By <%= report.reporter.username %> •
+                      <%= time_ago_in_words(report.created_at) %> ago
+                    </p>
+                  </div>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%=
+                    case report.status
+                    when 'pending' then 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                    when 'investigating' then 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+                    when 'resolved' then 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                    when 'dismissed' then 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                    end
+                  %>">
+                    <%= report.status.humanize %>
+                  </span>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+          No reports received
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+# frozen_string_literal: true
+
+one:
+  name: "Центр поддержки детей №1"
+  institution_type: 0  # children_center
+  address: "ул. Примерная, 123"
+  city: "Алматы"
+  region: "almaty"
+  phone: "+7 (727) 123-45-67"
+  email: "center1@example.com"
+  director_name: "Иванов Иван Иванович"
+  description: "Центр помощи детям из неблагополучных семей"
+  verified: true
+  verified_at: <%= 1.week.ago %>
+  website: "https://center1.example.com"
+
+two:
+  name: "Дом-интернат для престарелых"
+  institution_type: 1  # nursing_home
+  address: "пр. Абая, 456"
+  city: "Астана"
+  region: "astana"
+  phone: "+7 (717) 234-56-78"
+  email: "nursing@example.com"
+  director_name: "Петров Петр Петрович"
+  description: "Дом-интернат для пожилых людей"
+  verified: false
+  verified_at: null
+  website: null
+
+three:
+  name: "Частный пансионат Забота"
+  institution_type: 2  # care_facility
+  address: "ул. Тестовая, 789"
+  city: "Шымкент"
+  region: "turkestan"
+  phone: "+7 (725) 345-67-89"
+  email: "zabota@example.com"
+  director_name: "Сидоров Сидор Сидорович"
+  description: "Пансионат для людей, нуждающихся в постоянном уходе"
+  verified: true
+  verified_at: <%= 2.weeks.ago %>
+  website: "https://zabota.example.com"

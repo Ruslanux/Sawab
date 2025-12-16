@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Scale of justice -->
+  <rect x="47" y="20" width="6" height="60" fill="#7C3AED"/>
+  <!-- Base -->
+  <rect x="30" y="75" width="40" height="8" rx="2" fill="#5B21B6"/>
+  <!-- Top bar -->
+  <rect x="20" y="18" width="60" height="6" rx="2" fill="#7C3AED"/>
+  <!-- Left pan -->
+  <path d="M20 24 L15 50 Q15 55 25 55 Q35 55 35 50 L30 24" fill="#A78BFA"/>
+  <line x1="25" y1="24" x2="25" y2="45" stroke="#5B21B6" stroke-width="2"/>
+  <!-- Right pan -->
+  <path d="M70 24 L65 45 Q65 50 75 50 Q85 50 85 45 L80 24" fill="#A78BFA"/>
+  <line x1="75" y1="24" x2="75" y2="40" stroke="#5B21B6" stroke-width="2"/>
+</svg>

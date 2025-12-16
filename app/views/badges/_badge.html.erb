@@ -1,0 +1,45 @@
+<%# 
+  Этот partial ожидает локальную переменную 'user_badge' (экземпляр модели UserBadge).
+  Через неё мы получаем доступ к самой награде (.badge) и дате выдачи (.created_at).
+%>
+<div data-controller="badge" 
+     class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer group" 
+     data-action="click->badge#toggle">
+  
+  <div class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+    <div class="flex-shrink-0 transition-transform duration-200 ease-in-out">
+      <%# Проверяем наличие иконки в связанной модели Badge %>
+      <% if user_badge.badge.respond_to?(:icon_name) && user_badge.badge.icon_name.present? %>
+        <%= image_tag "#{user_badge.badge.icon_name}.svg", 
+            class: "h-12 w-12", 
+            onerror: "this.style.display='none';this.nextElementSibling.style.display='flex'" %>
+      <% end %>
+      
+      <!-- Fallback emoji icon (показывается, если иконки нет или она не загрузилась) -->
+      <div class="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center text-2xl" 
+           style="<%= 'display:none' if user_badge.badge.respond_to?(:icon_name) && user_badge.badge.icon_name.present? %>">
+        🏆
+      </div>
+    </div>
+    
+    <div class="flex-1 min-w-0">
+      <p class="font-semibold text-gray-900 truncate"><%= user_badge.badge.name %></p>
+      <%# ИСПРАВЛЕНИЕ: Используем created_at для даты получения %>
+      <p class="text-xs text-gray-500">Получено: <%= time_ago_in_words(user_badge.created_at) %> назад</p>
+    </div>
+    
+    <div data-badge-target="icon" class="text-gray-400 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+
+  <div data-badge-target="details" 
+       class="hidden max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out pl-14 pr-2">
+    <p class="text-sm text-gray-700 bg-gray-50 p-3 rounded-md border">
+      <%= user_badge.badge.description %>
+    </p>
+  </div>
+  
+</div>

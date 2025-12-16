@@ -1,0 +1,29 @@
+<%
+  # Usage: render 'shared/filter_button', label: "Open", path: path, active: true, color: 'green'
+  active ||= false
+  color ||= 'indigo'
+
+  # Map colors to full Tailwind classes (required for JIT compiler)
+  active_classes = case color
+  when 'green'
+    "bg-green-600 dark:bg-green-600 text-white font-bold shadow-lg ring-2 ring-green-600 dark:ring-green-500 ring-offset-2 dark:ring-offset-gray-800"
+  when 'blue'
+    "bg-blue-600 dark:bg-blue-600 text-white font-bold shadow-lg ring-2 ring-blue-600 dark:ring-blue-500 ring-offset-2 dark:ring-offset-gray-800"
+  when 'yellow'
+    "bg-yellow-500 dark:bg-yellow-500 text-white font-bold shadow-lg ring-2 ring-yellow-500 dark:ring-yellow-400 ring-offset-2 dark:ring-offset-gray-800"
+  when 'red'
+    "bg-red-600 dark:bg-red-600 text-white font-bold shadow-lg ring-2 ring-red-600 dark:ring-red-500 ring-offset-2 dark:ring-offset-gray-800"
+  when 'purple'
+    "bg-purple-600 dark:bg-purple-600 text-white font-bold shadow-lg ring-2 ring-purple-600 dark:ring-purple-500 ring-offset-2 dark:ring-offset-gray-800"
+  when 'indigo'
+    "bg-indigo-600 dark:bg-indigo-600 text-white font-bold shadow-lg ring-2 ring-indigo-600 dark:ring-indigo-500 ring-offset-2 dark:ring-offset-gray-800"
+  else
+    "bg-gray-600 dark:bg-gray-600 text-white font-bold shadow-lg ring-2 ring-gray-600 dark:ring-gray-500 ring-offset-2 dark:ring-offset-gray-800"
+  end
+
+  inactive_classes = "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600"
+%>
+
+<%= link_to label, path,
+    class: "px-3 py-2 rounded-lg text-sm font-medium transition-all #{active ? active_classes : inactive_classes}",
+    data: { active: active } %>

@@ -1,0 +1,44 @@
+<% content_for(:page_title, "User Messages") %>
+
+<div class="bg-white rounded-lg shadow-md">
+  <ul class="divide-y divide-gray-200">
+    <% if @threads.any? %>
+      <% @threads.each do |user_id, messages| %>
+        <% user = User.find(user_id) %>
+        <% last_message = messages.first %>
+        
+        <li class="hover:bg-gray-50">
+          <%= link_to admin_admin_message_path(id: user.id), class: "block p-6" do %>
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0">
+                <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                  <span class="text-indigo-600 font-semibold"><%= user.username[0].upcase %></span>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold text-gray-900">
+                    Диалог с: <%= user.username %>
+                  </p>
+                  <p class="text-xs text-gray-500">
+                    <%= time_ago_in_words(last_message.created_at) %> назад
+                  </p>
+                </div>
+                <div class="mt-1 text-sm text-gray-700 truncate">
+                  <% if last_message.sender == current_user %>
+                    <span class="font-medium">Вы:</span> 
+                  <% end %>
+                  <%= last_message.body %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    <% else %>
+      <li class="p-12 text-center text-gray-500">
+        Нет сообщений от пользователей.
+      </li>
+    <% end %>
+  </ul>
+</div>

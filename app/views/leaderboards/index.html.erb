@@ -1,0 +1,59 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6"><%= @title %></h1>
+
+  <!-- Фильтры (Неделя / Месяц / Все время) -->
+  <div class="mb-6">
+    <div class="flex border-b border-gray-300 dark:border-gray-700">
+      <%= link_to t('leaderboard.period_week'), leaderboards_path(period: 'week'), class: "px-4 py-2 font-medium #{ @period == 'week' ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' }" %>
+      <%= link_to t('leaderboard.period_month'), leaderboards_path(period: 'month'), class: "px-4 py-2 font-medium #{ @period == 'month' ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' }" %>
+      <%= link_to t('leaderboard.period_all_time'), leaderboards_path(period: 'all_time'), class: "px-4 py-2 font-medium #{ @period == 'all_time' ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' }" %>
+    </div>
+  </div>
+
+  <!-- Список лидеров -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+      <% if @top_helpers.any? %>
+        <% @top_helpers.each_with_index do |user, index| %>
+          <li class="p-4 flex items-center space-x-4">
+            <!-- Ранг -->
+            <div class="text-xl font-bold text-gray-500 dark:text-gray-400 w-8 text-center">
+              #<%= index + 1 %>
+            </div>
+
+            <!-- Аватар -->
+            <div class="flex-shrink-0">
+              <% if user.profile_picture.attached? %>
+                <%= image_tag user.avatar_url(size: :small), class: "h-12 w-12 rounded-full object-cover" %>
+              <% else %>
+                <div class="h-12 w-12 rounded-full bg-indigo-600 flex items-center justify-center">
+                  <span class="text-white font-semibold text-lg"><%= user.username[0].upcase %></span>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Имя и Sawab -->
+            <div class="flex-1">
+              <%= link_to user.username, user_path(user.username), class: "text-lg font-semibold text-indigo-600 dark:text-indigo-400 hover:underline" %>
+              <% if @period != 'all_time' %>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  <span class="font-bold text-green-600 dark:text-green-400">+<%= user.sawab_earned %> Sawab</span> <%= t('leaderboard.earned_this_period') %>
+                </p>
+              <% end %>
+            </div>
+
+            <!-- Общий Sawab -->
+            <div class="text-right">
+              <p class="text-lg font-bold text-gray-900 dark:text-gray-100"><%= user.sawab_balance %></p>
+              <p class="text-sm text-gray-500 dark:text-gray-400"><%= t('leaderboard.total_sawab') %></p>
+            </div>
+          </li>
+        <% end %>
+      <% else %>
+        <li class="p-12 text-center text-gray-500 dark:text-gray-400">
+          <%= t('leaderboard.no_data') %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

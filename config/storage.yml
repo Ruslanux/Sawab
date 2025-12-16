@@ -1,0 +1,49 @@
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
+
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+
+# Amazon S3 configuration
+# Use bin/rails credentials:edit to set the AWS secrets:
+#   aws:
+#     access_key_id: YOUR_ACCESS_KEY
+#     secret_access_key: YOUR_SECRET_KEY
+amazon:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  region: <%= ENV.fetch("AWS_REGION", "eu-central-1") %>
+  bucket: <%= ENV.fetch("AWS_BUCKET", "sawab-production") %>
+
+# DigitalOcean Spaces (S3-compatible)
+# Useful if you're deploying to DigitalOcean
+# Use bin/rails credentials:edit to set:
+#   digitalocean:
+#     access_key_id: YOUR_SPACES_KEY
+#     secret_access_key: YOUR_SPACES_SECRET
+digitalocean:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:digitalocean, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:digitalocean, :secret_access_key) %>
+  region: <%= ENV.fetch("DO_SPACES_REGION", "fra1") %>
+  bucket: <%= ENV.fetch("DO_SPACES_BUCKET", "sawab") %>
+  endpoint: https://<%= ENV.fetch("DO_SPACES_REGION", "fra1") %>.digitaloceanspaces.com
+
+# Google Cloud Storage
+# Remember not to checkin your GCS keyfile to a repository
+# google:
+#   service: GCS
+#   project: your_project
+#   credentials: <%= Rails.root.join("path/to/gcs.keyfile") %>
+#   bucket: your_own_bucket-<%= Rails.env %>
+
+# Azure Blob Storage
+# Use bin/rails credentials:edit to set the Azure Storage secret (as azure_storage:storage_access_key)
+# microsoft:
+#   service: AzureStorage
+#   storage_account_name: your_account_name
+#   storage_access_key: <%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>
+#   container: your_container_name-<%= Rails.env %>

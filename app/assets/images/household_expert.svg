@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- House -->
+  <path d="M50 15 L15 45 L15 85 L85 85 L85 45 Z" fill="#F97316"/>
+  <!-- Roof -->
+  <path d="M50 15 L10 50 L20 50 L50 25 L80 50 L90 50 Z" fill="#EA580C"/>
+  <!-- Door -->
+  <rect x="40" y="55" width="20" height="30" fill="#7C2D12"/>
+  <!-- Window -->
+  <rect x="60" y="50" width="15" height="15" fill="#FED7AA"/>
+  <line x1="67.5" y1="50" x2="67.5" y2="65" stroke="#EA580C" stroke-width="2"/>
+  <line x1="60" y1="57.5" x2="75" y2="57.5" stroke="#EA580C" stroke-width="2"/>
+  <!-- Wrench icon on door -->
+  <path d="M45 65 L55 75 M55 65 L45 75" stroke="#FED7AA" stroke-width="2"/>
+</svg>

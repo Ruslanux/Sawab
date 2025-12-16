@@ -1,0 +1,16 @@
+<%
+  # Usage: render 'shared/metadata_item', icon: :user, text: "Username"
+  #        render 'shared/metadata_item', icon: :clock, text: time_ago_in_words(time)
+  icon ||= :tag
+  link_to_path ||= nil
+  css_class ||= "flex items-center"
+%>
+
+<div class="<%= css_class %>">
+  <%= icon_tag(icon, class: "h-4 w-4 text-gray-400 dark:text-gray-500 mr-1 flex-shrink-0") %>
+  <% if link_to_path %>
+    <%= link_to text, link_to_path, class: "text-indigo-600 dark:text-indigo-400 hover:underline truncate" %>
+  <% else %>
+    <span class="truncate"><%= text %></span>
+  <% end %>
+</div>

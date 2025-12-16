@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Sawab" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <script nonce="<%= content_security_policy_nonce %>">
+      // Apply dark mode immediately to prevent flash of wrong theme
+      (function() {
+        const savedTheme = localStorage.getItem("theme");
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="/dark-mode.css?v=20">
+    <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "application" %>
+  </head>
+
+  <body class="bg-gray-100 dark:bg-gray-900 flex flex-col min-h-screen transition-colors duration-200">
+    <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-40" data-controller="mobile-menu">
+      <nav class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <%= link_to 'Sawab', root_path, class: "text-2xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition" %>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-4">
+            <%= render 'shared/dark_mode_toggle' %>
+            <%= render 'shared/locale_switcher' %>
+
+            <% if user_signed_in? %>
+              <%= render 'shared/nav_icons' %>
+              <span class="text-sm text-gray-700 dark:text-gray-300">
+                <%= t('nav.hello') %>, <%= link_to current_user.username, user_path(current_user.username), class: "font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition underline" %>!
+                <span class="ml-1 text-indigo-600 dark:text-indigo-400 font-semibold">(<%= current_user.sawab_balance %> <%= t('nav.sawab') %>)</span>
+              </span>
+              <%= link_to t('nav.leaderboard'), leaderboards_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition" %>
+              <%= link_to t('nav.institutions'), institutions_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition" %>
+              <%= button_to t('nav.sign_out'), destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-md text-sm transition shadow-sm" %>
+            <% else %>
+              <%= link_to t('nav.sign_up'), new_user_registration_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition" %>
+              <%= link_to t('nav.sign_in'), new_user_session_path, class: "bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-bold py-1 px-3 rounded-md text-sm transition shadow-sm" %>
+            <% end %>
+          </div>
+
+          <!-- Mobile: Icons + Hamburger -->
+          <div class="flex md:hidden items-center space-x-2">
+            <% if user_signed_in? %>
+              <%= render 'shared/nav_icons' %>
+            <% end %>
+            <%= render 'shared/dark_mode_toggle' %>
+
+            <!-- Hamburger Button -->
+            <button data-action="click->mobile-menu#toggle"
+                    class="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+                    aria-label="Toggle menu">
+              <!-- Hamburger Icon -->
+              <svg data-mobile-menu-target="openIcon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <!-- Close Icon -->
+              <svg data-mobile-menu-target="closeIcon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile Menu Overlay -->
+      <div data-mobile-menu-target="overlay"
+           data-action="click->mobile-menu#close"
+           class="fixed inset-0 bg-black/50 z-40 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
+
+      <!-- Mobile Menu Drawer -->
+      <div data-mobile-menu-target="menu"
+           class="fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-800 shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <div class="flex flex-col h-full">
+          <!-- Menu Header -->
+          <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <span class="text-lg font-bold text-indigo-600 dark:text-indigo-400">Menu</span>
+            <button data-action="click->mobile-menu#close"
+                    class="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Menu Content -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <% if user_signed_in? %>
+              <!-- User Info -->
+              <div class="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                    <span class="text-indigo-600 dark:text-indigo-400 font-bold text-lg"><%= current_user.username[0].upcase %></span>
+                  </div>
+                  <div>
+                    <%= link_to current_user.username, user_path(current_user.username),
+                        class: "font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400",
+                        data: { action: "click->mobile-menu#close" } %>
+                    <p class="text-sm text-indigo-600 dark:text-indigo-400 font-semibold"><%= current_user.sawab_balance %> <%= t('nav.sawab') %></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Navigation Links -->
+              <nav class="space-y-2">
+                <%= link_to requests_path, class: "flex items-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition", data: { action: "click->mobile-menu#close" } do %>
+                  <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  <%= t('nav.requests') %>
+                <% end %>
+
+                <%= link_to leaderboards_path, class: "flex items-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition", data: { action: "click->mobile-menu#close" } do %>
+                  <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <%= t('nav.leaderboard') %>
+                <% end %>
+
+                <%= link_to institutions_path, class: "flex items-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition", data: { action: "click->mobile-menu#close" } do %>
+                  <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <%= t('nav.institutions') %>
+                <% end %>
+
+                <%= link_to notifications_path, class: "flex items-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition", data: { action: "click->mobile-menu#close" } do %>
+                  <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  <%= t('nav.notifications_title') %>
+                <% end %>
+              </nav>
+            <% else %>
+              <!-- Guest Links -->
+              <nav class="space-y-2">
+                <%= link_to new_user_registration_path, class: "flex items-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition", data: { action: "click->mobile-menu#close" } do %>
+                  <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                  </svg>
+                  <%= t('nav.sign_up') %>
+                <% end %>
+
+                <%= link_to new_user_session_path, class: "flex items-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition", data: { action: "click->mobile-menu#close" } do %>
+                  <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  <%= t('nav.sign_in') %>
+                <% end %>
+              </nav>
+            <% end %>
+
+            <!-- Language Switcher -->
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"><%= t('nav.language', default: 'Language') %></p>
+              <div class="flex items-center gap-2">
+                <%= link_to url_for(locale: :en),
+                    class: "px-3 py-2 text-sm font-medium rounded-lg transition #{I18n.locale == :en ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}",
+                    data: { action: "click->mobile-menu#close" } do %>
+                  EN
+                <% end %>
+                <%= link_to url_for(locale: :ru),
+                    class: "px-3 py-2 text-sm font-medium rounded-lg transition #{I18n.locale == :ru ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}",
+                    data: { action: "click->mobile-menu#close" } do %>
+                  RU
+                <% end %>
+                <%= link_to url_for(locale: :kk),
+                    class: "px-3 py-2 text-sm font-medium rounded-lg transition #{I18n.locale == :kk ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}",
+                    data: { action: "click->mobile-menu#close" } do %>
+                  KZ
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <% if user_signed_in? %>
+            <!-- Sign Out Button -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+              <%= button_to destroy_user_session_path, method: :delete,
+                  class: "w-full flex items-center justify-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition" do %>
+                <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <%= t('nav.sign_out') %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <div id="flash-container" class="fixed top-20 right-5 z-50 w-full max-w-md space-y-3">
+      <% flash.each do |key, value| %>
+        <%
+          case key.to_sym
+          when :notice, :success
+            bg_class = "bg-green-50 dark:bg-green-900/90"
+            border_class = "border-green-400 dark:border-green-500"
+            text_class = "text-green-800 dark:text-green-100"
+            icon_class = "text-green-500 dark:text-green-400"
+            button_bg = "bg-green-50 dark:bg-green-800"
+            button_hover = "hover:bg-green-100 dark:hover:bg-green-700"
+            button_text = "text-green-500 dark:text-green-300"
+            focus_ring = "focus:ring-green-600"
+            icon_path = "M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          when :alert, :error
+            bg_class = "bg-red-50 dark:bg-red-900/90"
+            border_class = "border-red-400 dark:border-red-500"
+            text_class = "text-red-800 dark:text-red-100"
+            icon_class = "text-red-500 dark:text-red-400"
+            button_bg = "bg-red-50 dark:bg-red-800"
+            button_hover = "hover:bg-red-100 dark:hover:bg-red-700"
+            button_text = "text-red-500 dark:text-red-300"
+            focus_ring = "focus:ring-red-600"
+            icon_path = "M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          else
+            bg_class = "bg-blue-50 dark:bg-blue-900/90"
+            border_class = "border-blue-400 dark:border-blue-500"
+            text_class = "text-blue-800 dark:text-blue-100"
+            icon_class = "text-blue-500 dark:text-blue-400"
+            button_bg = "bg-blue-50 dark:bg-blue-800"
+            button_hover = "hover:bg-blue-100 dark:hover:bg-blue-700"
+            button_text = "text-blue-500 dark:text-blue-300"
+            focus_ring = "focus:ring-blue-600"
+            icon_path = "M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2a1 1 0 102 0V7zm0 4a1 1 0 10-2 0v4a1 1 0 102 0v-4z"
+          end
+        %>
+
+        <div data-controller="flash-message"
+             class="relative flex items-start <%= bg_class %> border-l-4 <%= border_class %> <%= text_class %> p-4 rounded-md shadow-lg transition-opacity duration-500"
+             role="alert">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 <%= icon_class %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="<%= icon_path %>" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3 flex-1">
+            <p class="text-sm font-medium"><%= value %></p>
+          </div>
+          <div class="ml-auto pl-3">
+            <div class="-mx-1.5 -my-1.5">
+              <button type="button"
+                      class="inline-flex <%= button_bg %> rounded-md p-1.5 <%= button_text %> <%= button_hover %> focus:outline-none focus:ring-2 focus:ring-offset-2 <%= focus_ring %> transition"
+                      data-action="click->flash-message#dismiss">
+                <span class="sr-only">Dismiss</span>
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <main class="container mx-auto mt-8 mb-8 px-4 flex-grow">
+      <%= yield %>
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-950 text-gray-300 dark:text-gray-400 py-8">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="text-center md:text-left">
+            <p class="text-sm"><%= t('footer.copyright', year: Time.now.year) %></p>
+            <p class="text-sm opacity-75 mt-1"><%= t('footer.tagline') %></p>
+          </div>
+          <div class="flex flex-col md:flex-row items-center gap-4 text-sm">
+            <%= link_to t('footer.about'), about_path, class: "hover:text-white transition" %>
+            <%= link_to t('footer.guidelines'), guidelines_path, class: "hover:text-white transition" %>
+            <a href="mailto:info@sawab.kz" class="hover:text-white transition">
+              <%= t('footer.contact') %>: info@sawab.kz
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

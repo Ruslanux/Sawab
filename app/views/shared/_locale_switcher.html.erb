@@ -1,0 +1,14 @@
+<div class="flex items-center gap-1 border border-gray-300 dark:border-gray-600 rounded-md overflow-hidden">
+  <%= link_to url_for(locale: :en),
+      class: "px-2 py-1 text-xs font-medium transition #{I18n.locale == :en ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}" do %>
+    EN
+  <% end %>
+  <%= link_to url_for(locale: :ru),
+      class: "px-2 py-1 text-xs font-medium transition #{I18n.locale == :ru ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}" do %>
+    RU
+  <% end %>
+  <%= link_to url_for(locale: :kk),
+      class: "px-2 py-1 text-xs font-medium transition #{I18n.locale == :kk ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}" do %>
+    KZ
+  <% end %>
+</div>

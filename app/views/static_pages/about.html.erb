@@ -1,0 +1,102 @@
+<% content_for(:title) { t('static_pages.about.title') } %>
+
+<div class="max-w-4xl mx-auto">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-12">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+      <%= t('static_pages.about.title') %>
+    </h1>
+
+    <div class="prose dark:prose-invert max-w-none">
+      <p class="text-lg text-gray-600 dark:text-gray-300 mb-6 text-center">
+        <%= t('static_pages.about.subtitle') %>
+      </p>
+
+      <div class="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold text-indigo-800 dark:text-indigo-300 mb-3">
+          <%= t('static_pages.about.what_is_sawab') %>
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          <%= t('static_pages.about.description') %>
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
+            <%= t('static_pages.about.need_help_title') %>
+          </h3>
+          <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+            <li class="flex items-start">
+              <span class="text-blue-500 mr-2 font-bold">1.</span>
+              <%= t('static_pages.about.need_help_step_1') %>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-500 mr-2 font-bold">2.</span>
+              <%= t('static_pages.about.need_help_step_2') %>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-500 mr-2 font-bold">3.</span>
+              <%= t('static_pages.about.need_help_step_3') %>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-500 mr-2 font-bold">4.</span>
+              <%= t('static_pages.about.need_help_step_4') %>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-green-800 dark:text-green-300 mb-3">
+            <%= t('static_pages.about.want_help_title') %>
+          </h3>
+          <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+            <li class="flex items-start">
+              <span class="text-green-500 mr-2 font-bold">1.</span>
+              <%= t('static_pages.about.want_help_step_1') %>
+            </li>
+            <li class="flex items-start">
+              <span class="text-green-500 mr-2 font-bold">2.</span>
+              <%= t('static_pages.about.want_help_step_2') %>
+            </li>
+            <li class="flex items-start">
+              <span class="text-green-500 mr-2 font-bold">3.</span>
+              <%= t('static_pages.about.want_help_step_3') %>
+            </li>
+            <li class="flex items-start">
+              <span class="text-green-500 mr-2 font-bold">4.</span>
+              <%= t('static_pages.about.want_help_step_4') %>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-6 mb-8">
+        <h3 class="text-xl font-semibold text-amber-800 dark:text-amber-300 mb-3">
+          <%= t('static_pages.about.what_is_sawab_points') %>
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          <%= t('static_pages.about.sawab_explanation') %>
+        </p>
+      </div>
+
+      <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
+          <%= t('static_pages.about.our_mission_title') %>
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          <%= t('static_pages.about.our_mission') %>
+        </p>
+      </div>
+
+      <div class="text-center">
+        <% if user_signed_in? %>
+          <%= link_to t('static_pages.about.browse_requests'), requests_path,
+              class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition" %>
+        <% else %>
+          <%= link_to t('static_pages.about.join_community'), new_user_registration_path,
+              class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

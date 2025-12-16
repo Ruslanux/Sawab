@@ -1,0 +1,163 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-12 shadow-lg">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-6 md:mb-0">
+          <h1 class="text-4xl md:text-5xl font-bold mb-3">
+            <%= t('institutions.index.title') %>
+          </h1>
+          <p class="text-xl text-emerald-100">
+            <%= t('institutions.index.subtitle') %>
+          </p>
+        </div>
+
+        <% if user_signed_in? %>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <%= link_to my_institutions_institutions_path,
+                class: "inline-flex items-center px-5 py-2.5 bg-white/20 text-white rounded-full font-medium hover:bg-white/30 transition-all" do %>
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              <%= t('institutions.my_institutions.title') %>
+            <% end %>
+            <%= link_to new_institution_path,
+                class: "inline-flex items-center px-6 py-3 bg-white text-emerald-600 rounded-full font-bold hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl transform hover:scale-105" do %>
+              <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <%= t('institutions.index.register_institution') %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Filters Sidebar -->
+      <aside class="lg:w-1/4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700 sticky top-4">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+            <%= t('institutions.index.filters') %>
+          </h3>
+
+          <%= form_with url: institutions_path, method: :get, local: true, class: "space-y-4" do |f| %>
+            <!-- Search -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <%= t('institutions.index.search') %>
+              </label>
+              <%= text_field_tag :q, params[:q],
+                  class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white",
+                  placeholder: t('institutions.index.search_placeholder') %>
+            </div>
+
+            <!-- Type Filter -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <%= t('institutions.index.type') %>
+              </label>
+              <%= select_tag :institution_type,
+                  options_for_select(
+                    [[t('institutions.index.all_types'), '']] +
+                    @institution_types.map { |type| [t("institutions.types.#{type}"), type] },
+                    params[:institution_type]
+                  ),
+                  class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white" %>
+            </div>
+
+            <!-- Region Filter -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <%= t('institutions.index.region') %>
+              </label>
+              <%= select_tag :region,
+                  options_for_select(
+                    [[t('institutions.index.all_regions'), '']] +
+                    I18n.t('regions').map { |k, v| [v, k] },
+                    params[:region]
+                  ),
+                  class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white" %>
+            </div>
+
+            <%= submit_tag t('filters.apply_filters'),
+                class: "w-full bg-emerald-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-emerald-700 transition cursor-pointer" %>
+
+            <% if params[:q].present? || params[:institution_type].present? || params[:region].present? %>
+              <%= link_to t('filters.clear_filters'), institutions_path,
+                  class: "block w-full text-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 text-sm" %>
+            <% end %>
+          <% end %>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="lg:w-3/4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6 border border-gray-200 dark:border-gray-700">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+            <%= t('institutions.index.count', count: @institutions.total_count) %>
+          </h2>
+        </div>
+
+        <% if @institutions.any? %>
+          <div class="grid gap-6 md:grid-cols-2">
+            <% @institutions.each do |institution| %>
+              <%= render 'institution_card', institution: institution %>
+            <% end %>
+          </div>
+
+          <!-- Pagination -->
+          <% if @institutions.total_pages > 1 %>
+            <div class="mt-8 flex items-center justify-between">
+              <div class="text-sm text-gray-700 dark:text-gray-300">
+                <%= t('pagination.showing') %>
+                <span class="font-medium"><%= @institutions.offset_value + 1 %></span>
+                <%= t('pagination.to') %>
+                <span class="font-medium"><%= [@institutions.offset_value + @institutions.limit_value, @institutions.total_count].min %></span>
+                <%= t('pagination.of') %>
+                <span class="font-medium"><%= @institutions.total_count %></span>
+              </div>
+              <div class="flex space-x-2">
+                <% if @institutions.first_page? %>
+                  <span class="px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg cursor-not-allowed">
+                    <%= t('pagination.previous') %>
+                  </span>
+                <% else %>
+                  <%= link_to t('pagination.previous'), institutions_path(page: @institutions.current_page - 1, q: params[:q], region: params[:region], institution_type: params[:institution_type]),
+                      class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600" %>
+                <% end %>
+
+                <span class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 dark:bg-emerald-700 border border-emerald-600 dark:border-emerald-700 rounded-lg">
+                  <%= @institutions.current_page %> / <%= @institutions.total_pages %>
+                </span>
+
+                <% if @institutions.last_page? %>
+                  <span class="px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg cursor-not-allowed">
+                    <%= t('pagination.next') %>
+                  </span>
+                <% else %>
+                  <%= link_to t('pagination.next'), institutions_path(page: @institutions.current_page + 1, q: params[:q], region: params[:region], institution_type: params[:institution_type]),
+                      class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-12 text-center border border-gray-200 dark:border-gray-700">
+            <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <h3 class="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <%= t('institutions.index.no_institutions') %>
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              <%= t('institutions.index.no_institutions_description') %>
+            </p>
+          </div>
+        <% end %>
+      </main>
+    </div>
+  </div>
+</div>

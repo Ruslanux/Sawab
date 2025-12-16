@@ -1,0 +1,844 @@
+en:
+  date:
+    abbr_day_names:
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
+    abbr_month_names:
+      -
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
+    day_names:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+    formats:
+      default: "%Y-%m-%d"
+      long: "%B %d, %Y"
+      short: "%b %d"
+      long_date_only: "%B %d, %Y"
+    month_names:
+      -
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    order:
+      - :year
+      - :month
+      - :day
+
+  time:
+    am: am
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+      long_date_only: "%B %d, %Y"
+    pm: pm
+
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: about %{count} hour
+        other: about %{count} hours
+      about_x_months:
+        one: about %{count} month
+        other: about %{count} months
+      about_x_years:
+        one: about %{count} year
+        other: about %{count} years
+      almost_x_years:
+        one: almost %{count} year
+        other: almost %{count} years
+      half_a_minute: half a minute
+      less_than_x_minutes:
+        one: less than %{count} minute
+        other: less than %{count} minutes
+      less_than_x_seconds:
+        one: less than %{count} second
+        other: less than %{count} seconds
+      over_x_years:
+        one: over %{count} year
+        other: over %{count} years
+      x_days:
+        one: "%{count} day"
+        other: "%{count} days"
+      x_minutes:
+        one: "%{count} minute"
+        other: "%{count} minutes"
+      x_months:
+        one: "%{count} month"
+        other: "%{count} months"
+      x_seconds:
+        one: "%{count} second"
+        other: "%{count} seconds"
+      x_years:
+        one: "%{count} year"
+        other: "%{count} years"
+    prompts:
+      day: Day
+      hour: Hour
+      minute: Minute
+      month: Month
+      second: Second
+      year: Year
+
+  # ActiveRecord validation errors
+  activerecord:
+    errors:
+      messages:
+        too_short: "is too short (minimum is %{count} characters)"
+        too_long: "is too long (maximum is %{count} characters)"
+        blank: "can't be blank"
+        invalid: "is invalid"
+        taken: "has already been taken"
+
+  # General validation errors
+  errors:
+    messages:
+      invalid_content_type: "must be a file of type %{acceptable}"
+      file_size_too_large: "file size must not exceed %{max_size}"
+
+  # General translations
+  hello: "Hello world"
+
+  # Pagination
+  pagination:
+    showing: "Showing"
+    to: "to"
+    of: "of"
+    previous: "Previous"
+    next: "Next"
+
+  # Common translations
+  common:
+    ago: "ago"
+    view: "View"
+    edit: "Edit"
+    delete: "Delete"
+    cancel: "Cancel"
+    save: "Save"
+    back: "Back"
+    loading: "Loading..."
+
+  # Navigation and common elements
+  nav:
+    requests: "Requests"
+    leaderboard: "Leaderboard"
+    new_request: "New Request"
+    institutions: "Institutions"
+    language: "Language"
+    sign_out: "Sign Out"
+    sign_in: "Sign In"
+    sign_up: "Sign Up"
+    profile: "Profile"
+    notifications: "Notifications"
+    messages: "Messages"
+    sawab: "Sawab"
+    hello: "Hello"
+    notifications_title: "Notifications"
+    mark_all_read: "Mark all as read"
+    no_notifications: "No new notifications"
+    all_notifications: "All Notifications"
+    admin_messages_title: "Admin Messages"
+
+  # Requests
+  requests:
+    location_not_specified: "Location not specified"
+    index:
+      title: "🙏 Open Help Requests"
+      subtitle: "Find requests where you can help and make a difference"
+      my_offers_title: "💬 My Offers"
+      my_offers_subtitle: "Manage your offers and track responses"
+      create_new: "Create New Request"
+      requests_count: "Requests (%{count})"
+      offers_count: "Offers (%{count})"
+      search_results: "Search results: \"%{query}\""
+      status_filter: "Status: %{status}"
+      showing_all: "Showing all results"
+      sort_by: "Sort by:"
+      recent: "Recent"
+      oldest: "Oldest"
+      no_requests: "No requests found"
+      no_offers: "You haven't made any offers yet"
+      try_filters: "Try adjusting or clearing filters"
+      no_category_requests: "No one has created a help request in this category yet"
+      start_helping: "Start helping others by offering your support!"
+      clear_filters: "Clear filters"
+      create_request: "Create Request"
+
+    new:
+      title: "New Help Request"
+      title_label: "Title"
+      title_placeholder: "Brief description of what you need help with..."
+      title_help: "5-100 characters"
+      category_label: "Category"
+      category_placeholder: "Select a category..."
+      description_label: "Description"
+      description_placeholder: "Please provide detailed information about what help you need..."
+      description_help: "Minimum 20 characters. Be specific about what help you need."
+      location_title: "Location"
+      location_help: "Enter your location so people can find requests in their city"
+      region_label: "Region"
+      region_placeholder: "Select region..."
+      city_label: "City"
+      city_placeholder: "e.g., Atyrau, Aktobe, Almaty..."
+      cancel: "Cancel"
+      create: "Create Request"
+
+    show:
+      back_to_all: "← Back to all requests"
+      report_request: "🚩 Report Request"
+      category: "Category:"
+      posted_by: "Posted by:"
+      ago: "ago"
+      location: "Location:"
+      want_to_help: "Want to help?"
+      offer_message_label: "Your offer message"
+      offer_message_placeholder: "Describe how you can help... (minimum 10 characters)"
+      offer_message_help: "Minimum 10 characters, maximum 500 characters"
+      submit_offer: "Submit Offer"
+      offers_title: "Offers"
+      offers_count: "(%{count})"
+      no_offers: "No offers yet"
+      be_first: "Be the first to offer help!"
+      edit: "Edit"
+      delete: "Delete"
+      delete_confirm: "Are you sure you want to delete this request?"
+      accept: "Accept"
+      reject: "Reject"
+      accept_confirm: "Accept this offer? All other pending offers will be rejected and the request status will change to \"In Progress\"."
+      complete_request: "Mark as Complete & Award Sawab"
+      complete_confirm: "Are you sure you received the help and want to complete this request? This will award 1 Sawab to %{helper}."
+      mark_pending: "Mark as Awaiting Completion"
+      mark_pending_confirm: "Are you sure you've completed this request? The requester will be notified for confirmation."
+      pending_completion_msg: "Waiting for requester (%{username}) to confirm completion."
+      disputed_msg: "This request is disputed. An admin is reviewing it."
+      own_request_msg: "You cannot offer help on your own request."
+      chat_with: "Chat with %{username}"
+      chat_description: "Discuss request details and coordinate help in real-time"
+      open_chat: "Open Chat"
+      reviews_title: "Reviews for this Request"
+      leave_review: "Leave a review for %{username}"
+      review_already_left: "You've already left a review."
+
+    card:
+      view_details: "View Details"
+      ago: "ago"
+      offer: "offer"
+      offers: "offers"
+      offers_1: "offer"
+      offers_2: "offers"
+      offer_on: "Offer on:"
+      your_message: "Your message:"
+      original_request: "Original request:"
+      request_by: "Request by:"
+      sent: "Sent"
+      view_request: "View Request"
+      delete: "Delete"
+      delete_confirm: "Are you sure you want to delete this offer?"
+      accepted_title: "Your offer was accepted!"
+      accepted_text: "Contact the request author to coordinate the next steps."
+      rejected_title: "Offer not accepted"
+      rejected_text: "The request author chose another helper."
+      pending_title: "Waiting for response"
+      pending_text: "The request author hasn't reviewed your offer yet."
+
+    flash:
+      completed: "Request marked as complete, Sawab awarded!"
+      pending: "Request marked as awaiting requester confirmation."
+      dispute_completed: "Dispute resolved. Request completed, Sawab awarded."
+      dispute_cancelled: "Dispute resolved. Request cancelled."
+      cancel_failed: "Failed to cancel request."
+    errors:
+      no_accepted_offer: "Cannot complete this request (no accepted offer found)."
+      already_completed_or_cancelled: "Request is already completed or cancelled."
+      cannot_cancel: "Cannot cancel this request."
+
+  # Filters
+  filters:
+    title: "Filters"
+    clear_all: "Clear all"
+    search_placeholder: "Search by title or description..."
+    view_type: "View type"
+    requests: "Requests"
+    my_offers: "My Offers"
+    status: "Status"
+    all: "All"
+    open: "Open"
+    in_progress: "In Progress"
+    completed: "Completed"
+    cancelled: "Cancelled"
+    pending: "Pending"
+    accepted: "Accepted"
+    rejected: "Rejected"
+    category: "Category"
+    all_categories: "All categories"
+    time_period: "Time period"
+    today: "Today"
+    this_week: "This week"
+    this_month: "This month"
+    all_time: "All time"
+    location: "Location"
+    region: "Region"
+    all_regions: "All regions"
+    city: "City"
+    city_placeholder: "e.g., Almaty"
+    apply_filters: "Apply filters"
+    statistics: "Statistics:"
+    total_found: "Total found:"
+    active_filters: "Active filters:"
+    search_label: "Search:"
+    status_label: "Status:"
+    category_label: "Category:"
+    time_label: "Period:"
+    region_label: "Region:"
+    city_label: "City:"
+
+  # Footer
+  footer:
+    copyright: "© %{year} Sawab. All rights reserved."
+    tagline: "Connecting those in need with those who can help."
+    about: "About"
+    guidelines: "Guidelines"
+    contact: "Contact"
+
+  # Static pages
+  static_pages:
+    about:
+      title: "About Sawab"
+      subtitle: "A mutual aid platform connecting people for good deeds"
+      what_is_sawab: "What is Sawab?"
+      description: "Sawab is a mutual aid platform where people can ask for help or offer their support to others. The name comes from the Arabic word 'sawab' (ثواب), meaning a spiritual reward that a person receives from the Almighty for doing good deeds. Our mission is to create a community where everyone can help and receive help."
+      need_help_title: "Need help?"
+      need_help_step_1: "Create a request describing your situation and what help you need"
+      need_help_step_2: "Wait for offers from those willing to help"
+      need_help_step_3: "Choose a suitable helper and connect through chat"
+      need_help_step_4: "After receiving help, confirm completion — the helper will receive Sawab points"
+      want_help_title: "Want to help?"
+      want_help_step_1: "Browse open help requests"
+      want_help_step_2: "Find a request where you can be useful"
+      want_help_step_3: "Send an offer to help and wait for a response"
+      want_help_step_4: "Connect with the requester through chat and provide assistance"
+      what_is_sawab_points: "What are Sawab points?"
+      sawab_explanation: "Sawab points are a symbolic reward for helping others. They show each participant's contribution to the community. The more you help, the higher your ranking on the leaderboard and more spiritual rewards you earn!"
+      our_mission_title: "Our mission"
+      our_mission: "We believe that everyone can help someone else. Sawab is created to make mutual aid simple and accessible. Whether it's help with moving, legal consultation, or just advice — here you'll find those ready to support."
+      browse_requests: "Browse help requests"
+      join_community: "Join the community"
+    guidelines:
+      title: "Rules and Guidelines"
+      subtitle: "A guide for safe and effective mutual assistance"
+      correct: "Correct"
+      incorrect: "Incorrect"
+      back_to_requests: "Back to requests"
+      for_askers:
+        title: "For Those Seeking Help"
+        principle: "Create requests based on genuine need"
+        principle_description: "The Sawab platform is designed for mutual assistance when a person truly needs support. Please do not use it as a way to save money on services you can afford."
+        examples_title: "Examples of correct and incorrect requests:"
+        examples:
+          transport:
+            category: "Transportation"
+            correct: "An elderly person cannot get to the hospital on their own, needs help with transportation"
+            incorrect: "I don't want to pay for a taxi, give me a free ride"
+          physical:
+            category: "Physical Help"
+            correct: "A single mother is moving and cannot afford movers"
+            incorrect: "I have money but want to save on the move"
+          medical:
+            category: "Medical Help"
+            correct: "An elderly woman living alone cannot get to the pharmacy for her medication"
+            incorrect: "I don't want to wait in line at the clinic, go for me"
+          household:
+            category: "Household Services"
+            correct: "A wheelchair user cannot fix a leaking faucet on their own"
+            incorrect: "Too lazy to call a plumber, fix it for free"
+      for_helpers:
+        title: "For Those Who Help"
+        principle: "Help selflessly"
+        principle_description: "True help comes from the heart. Sawab points are merely a symbolic reflection of your good deeds, not their purpose."
+        dont_chase_points: "Don't chase points at your own expense"
+        warnings:
+          warning_1: "Don't lift heavy objects if you're not physically ready"
+          warning_2: "Don't take on tasks requiring special skills you don't have"
+          warning_3: "Don't help everyone indiscriminately, depleting your own resources — time, health, finances"
+          warning_4: "Learn to say 'no' if you feel the request is beyond your capabilities"
+        quality_over_quantity: "Remember: it's not about the quantity of deeds, but the quality and sincerity of intention."
+      safety:
+        title: "Safety Measures"
+        priority: "Your safety is a priority. No points are worth risking your well-being."
+        rules:
+          rule_1:
+            title: "Inform loved ones about your plans"
+            description: "Always tell relatives or friends where you're going and who you're meeting"
+          rule_2:
+            title: "Meet in public places"
+            description: "Choose crowded places for first meetings"
+          rule_3:
+            title: "Trust your intuition"
+            description: "If something seems suspicious, decline the meeting"
+          rule_4:
+            title: "Don't share personal data"
+            description: "Bank card numbers, passport details, SMS codes"
+          rule_5:
+            title: "Assess risks objectively"
+            description: "Not everyone acts with good intentions. Stay vigilant"
+          rule_6:
+            title: "Don't risk your life and health"
+            description: "No points are worth your well-being"
+      meaning:
+        title: "The Meaning of Mutual Aid"
+        paragraph_1: "In our time, many rush to outdo each other in worldly matters — a new car, a trendy smartphone, a renovated apartment. We postpone good deeds 'for later': in childhood — studies, in youth — entertainment, in adulthood — career and family, and charity — someday in old age."
+        paragraph_2: "But in old age, there is often neither strength, nor health, nor opportunity left. The Almighty calls us to compete not in accumulating worldly things, but in good deeds."
+        quran_quote: "\"So race one another to good deeds\""
+        quran_source: "— Surah Al-Baqarah, verse 148"
+        conclusion: "Sawab points are just a counter. True reward comes with a reasonable approach and sincere intention."
+        call_to_action: "Start competing in good deeds today!"
+
+  # Request statuses
+  request_status:
+    open: "Open"
+    in_progress: "In Progress"
+    completed: "Completed"
+    cancelled: "Cancelled"
+    pending_completion: "Awaiting Completion"
+    disputed: "Disputed"
+
+  # Offer statuses
+  offer_status:
+    pending: "Pending"
+    accepted: "Accepted"
+    rejected: "Rejected"
+
+  # Report types
+  report_type:
+    spam: "Spam"
+    inappropriate: "Inappropriate Content"
+    fraud: "Fraud"
+    other: "Other"
+
+  # User profile
+  users:
+    edit:
+      title: "Edit Profile"
+      subtitle: "Update your profile information"
+      profile_picture: "Profile Picture"
+      supported_formats: "Supported formats: PNG, JPG, JPEG, GIF. Maximum size: 5MB"
+      remove_picture: "Remove Picture"
+      remove_confirm: "Are you sure you want to remove your profile picture?"
+      basic_information: "Basic Information"
+      username: "Username"
+      username_placeholder: "Your username"
+      email: "Email"
+      email_placeholder: "your@email.com"
+      phone: "Phone"
+      phone_placeholder: "+7 XXX XXX XXXX"
+      location: "Location"
+      location_placeholder: "City, Country"
+      change_password: "Change Password"
+      password_help: "Leave blank if you don't want to change your password"
+      new_password: "New Password"
+      new_password_placeholder: "Enter new password"
+      password_min: "Minimum 6 characters"
+      confirm_password: "Confirm New Password"
+      confirm_password_placeholder: "Confirm new password"
+      cancel: "Cancel"
+      update: "Update Profile"
+    destroy:
+      danger_zone: "Danger Zone"
+      warning: "Be careful - this action cannot be undone!"
+      description: "Deleting your account will permanently delete:"
+      will_delete:
+        requests: "All your help requests"
+        offers: "All your help offers"
+        messages: "All your messages"
+        reviews: "All your reviews"
+        notifications: "All your notifications"
+      confirm: "Are you sure you want to delete your account? This action is IRREVERSIBLE. All your data will be permanently deleted."
+      button: "Delete Account"
+      success: "Your account has been successfully deleted. Goodbye!"
+      last_admin_error: "Cannot delete the last system administrator."
+    profile:
+      edit_profile: "Edit Profile"
+      report_user: "Report User"
+      total_requests: "Total Requests"
+      total_offers: "Total Offers"
+      accepted_offers: "Accepted Offers"
+      badges_title: "Badges (%{count})"
+      no_badges: "User has no badges yet."
+      reviews_received_title: "Recent Reviews Received"
+      no_reviews: "No reviews yet."
+      recent_requests_title: "Recent Requests"
+      no_requests: "No requests yet."
+      recent_offers_title: "Recent Offers"
+      for_label: "For:"
+      no_offers: "No offers yet."
+      sawab_balance: "SAWAB BALANCE"
+      joined: "Joined"
+      ago: "ago"
+      by: "by"
+      of: "of"
+
+  # Devise
+  devise:
+    sessions:
+      new:
+        title: "Sign in to your account"
+        email: "Email"
+        password: "Password"
+        forgot_password: "Forgot your password?"
+        remember_me: "Remember me"
+        sign_in: "Sign in"
+        not_member: "Not a member yet?"
+        sign_up: "Sign up"
+      signed_in: "Signed in successfully."
+      signed_out: "Signed out successfully."
+      already_signed_out: "Already signed out."
+    passwords:
+      send_instructions: "You will receive an email with instructions on how to reset your password in a few minutes."
+      updated: "Your password has been changed successfully. You are now signed in."
+      updated_not_active: "Your password has been changed successfully."
+      send_paranoid_instructions: "If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
+      no_token: "You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided."
+    confirmations:
+      confirmed: "Your email address has been successfully confirmed."
+      send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
+      send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
+    registrations:
+      new:
+        title: "Create a new account"
+        username: "Username"
+        email: "Email"
+        password: "Password"
+        password_min: "characters minimum"
+        password_confirmation: "Password confirmation"
+        sign_up: "Sign up"
+        already_member: "Already a member?"
+        log_in: "Log in"
+      signed_up: "Welcome! You have signed up successfully."
+      signed_up_but_inactive: "You have signed up successfully. However, we could not sign you in because your account is not yet activated."
+      signed_up_but_locked: "You have signed up successfully. However, we could not sign you in because your account is locked."
+      signed_up_but_unconfirmed: "A message with a confirmation link has been sent to your email address. Please follow the link to activate your account."
+      update_needs_confirmation: "You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address."
+      updated: "Your account has been updated successfully."
+      destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
+    unlocks:
+      send_instructions: "You will receive an email with instructions for how to unlock your account in a few minutes."
+      send_paranoid_instructions: "If your account exists, you will receive an email with instructions for how to unlock it in a few minutes."
+      unlocked: "Your account has been unlocked successfully. Please sign in to continue."
+    omniauth_callbacks:
+      success: "Successfully authenticated from %{kind} account."
+      failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
+    mailer:
+      confirmation_instructions:
+        subject: "Confirmation instructions"
+      reset_password_instructions:
+        subject: "Reset password instructions"
+      unlock_instructions:
+        subject: "Unlock instructions"
+      email_changed:
+        subject: "Email Changed"
+      password_change:
+        subject: "Password Changed"
+    failure:
+      already_authenticated: "You are already signed in."
+      inactive: "Your account is not activated yet."
+      invalid: "Invalid %{authentication_keys} or password."
+      locked: "Your account is locked."
+      last_attempt: "You have one more attempt before your account is locked."
+      not_found_in_database: "Invalid %{authentication_keys} or password."
+      timeout: "Your session expired. Please sign in again to continue."
+      unauthenticated: "You need to sign in or sign up before continuing."
+      unconfirmed: "You have to confirm your email address before continuing."
+
+  # Leaderboard
+  leaderboard:
+    title_week: "Top Helpers (Week)"
+    title_month: "Top Helpers (Month)"
+    title_all_time: "Top Helpers (All Time)"
+    period_week: "This week"
+    period_month: "This month"
+    period_all_time: "All time"
+    total_sawab: "Total Sawab"
+    earned_this_period: "this period"
+    no_data: "No data to display yet. Start helping!"
+
+  # Offers
+  offers:
+    flash:
+      created: "Your offer was successfully submitted!"
+      create_error: "Could not submit offer."
+      accepted: "Offer accepted!"
+      rejected: "Offer rejected."
+      invalid_status: "Invalid status."
+    errors:
+      request_not_open: "Can only accept offers for open requests."
+
+  # Messages
+  messages:
+    success: "Success!"
+    error: "Error!"
+    confirm: "Are you sure?"
+
+  # Conversations
+  conversations:
+    show:
+      error_title: "Error"
+      not_found: "Conversation not found. Perhaps the offer has not been accepted yet."
+      back_to_request: "← Back to request"
+      chat_title: "Chat for request:"
+      participants: "Participants:"
+      and: "and"
+      placeholder: "Enter message..."
+      send: "Send"
+      unauthorized: "You are not authorized to view this conversation."
+      no_conversation: "No conversation available."
+
+  # Notifications page
+  notifications:
+    index:
+      title: "Notifications"
+      mark_all_read: "Mark all as read"
+      view_notification: "View notification"
+      delete_confirm: "Delete notification?"
+      no_notifications: "No notifications"
+      no_notifications_text: "You have no notifications yet."
+    messages:
+      new_offer: "%{actor_name} made an offer on your request"
+      offer_accepted: "Your offer was accepted"
+      offer_rejected: "Your offer was rejected"
+      new_message: "New message from %{actor_name}"
+      pending_completion: "%{actor_name} marked the request as complete. Please confirm."
+      request_completed: "Request completed"
+      report_resolved: "Your report has been resolved"
+      report_dismissed: "Your report has been dismissed"
+      user_warned: "You received a warning: \"%{resolution_note}\""
+      badge_unlocked: "Congratulations! You earned: \"%{name}\""
+      dispute_created: "New dispute opened for '%{title}'"
+      request_auto_completed: "Your request '%{title}' was auto-completed after 7 days"
+      inactive_request_reminder: "Reminder: Request '%{title}' is waiting for completion"
+      dispute_escalation: "Escalation: Dispute for '%{title}' requires attention"
+      institution_pending_verification: "New institution '%{name}' pending verification"
+      institution_verified: "Your institution '%{name}' has been verified"
+      institution_request_created: "New request from institution '%{institution_name}'"
+      default: "You have a new notification"
+
+  # Regions of Kazakhstan
+  regions:
+    almaty: "Almaty"
+    astana: "Astana"
+    shymkent: "Shymkent"
+    akmola: "Akmola Region"
+    aktobe: "Aktobe Region"
+    almaty_region: "Almaty Region"
+    atyrau: "Atyrau Region"
+    east_kazakhstan: "East Kazakhstan"
+    zhambyl: "Zhambyl Region"
+    west_kazakhstan: "West Kazakhstan"
+    karaganda: "Karaganda Region"
+    kostanay: "Kostanay Region"
+    kyzylorda: "Kyzylorda Region"
+    mangystau: "Mangystau Region"
+    pavlodar: "Pavlodar Region"
+    north_kazakhstan: "North Kazakhstan"
+    turkestan: "Turkestan Region"
+    ulytau: "Ulytau Region"
+    zhetisu: "Zhetisu Region"
+    abai: "Abai Region"
+
+  # Institutions
+  institutions:
+    index:
+      title: "Institutions"
+      subtitle: "Support centers, nursing homes, and care facilities that need help"
+      register_institution: "Register Institution"
+      filters: "Filters"
+      search: "Search"
+      search_placeholder: "Name or address..."
+      type: "Institution Type"
+      all_types: "All Types"
+      region: "Region"
+      all_regions: "All Regions"
+      count:
+        one: "%{count} institution"
+        other: "%{count} institutions"
+      no_institutions: "No institutions found"
+      no_institutions_description: "Try changing search parameters or register a new institution."
+    types:
+      children_center: "Children and Family Support Center"
+      nursing_home: "Nursing Home"
+      care_facility: "Private Care Facility"
+      orphanage: "Orphanage"
+      disability_center: "Disability Support Center"
+      rehabilitation_center: "Rehabilitation Center"
+      other: "Other"
+    verified: "Verified"
+    pending_verification: "Pending Verification"
+    active_requests: "active requests"
+    view_details: "View Details"
+    about: "About Us"
+    open_requests: "Open Requests"
+    view_all_requests: "All Requests"
+    no_open_requests: "No open requests"
+    contact_info: "Contact Information"
+    address: "Address"
+    phone: "Phone"
+    email: "Email"
+    website: "Website"
+    director: "Director"
+    representatives: "Representatives"
+    beneficiary: "Beneficiary"
+    edit_button: "Edit"
+    manage_members: "Manage Members"
+    create_request: "Create Request"
+    cannot_create_request: "You cannot create requests on behalf of this institution. The institution must be verified and you must be its representative."
+    created_pending_verification: "Institution created and pending administrator verification."
+    updated: "Institution updated."
+    destroyed: "Institution deleted."
+    new:
+      title: "Register Institution"
+      subtitle: "Register your institution to receive help from volunteers"
+    edit:
+      title: "Edit Institution"
+    form:
+      basic_info: "Basic Information"
+      name: "Institution Name"
+      name_placeholder: "e.g., Children Support Center #5"
+      type: "Institution Type"
+      director_name: "Director's Full Name"
+      director_name_placeholder: "John Smith"
+      description: "Description"
+      description_placeholder: "Tell us about your institution, its mission and needs..."
+      address_section: "Address"
+      region: "Region"
+      select_region: "Select Region"
+      city: "City"
+      city_placeholder: "Almaty"
+      address: "Address"
+      address_placeholder: "123 Example Street"
+      contact_section: "Contact Information"
+      phone: "Phone"
+      email: "Email"
+      website: "Website"
+      your_info: "Your Information"
+      your_position: "Your Position"
+      position_placeholder: "e.g., Social Worker"
+      position_hint: "Specify your position at the institution"
+      verification_notice_title: "Important"
+      verification_notice_text: "After registration, the institution will be verified by our moderators. You will receive a notification after verification."
+      create: "Register Institution"
+      update: "Save Changes"
+    my_institutions:
+      title: "My Institutions"
+      subtitle: "Institutions where you are a representative"
+      register_new: "Register New"
+      your_role: "Your Role"
+      no_institutions: "You have no institutions"
+      no_institutions_description: "You haven't registered any institutions yet."
+      register_first: "Register First Institution"
+      delete: "Delete Institution"
+      delete_confirm: "Are you sure you want to delete this institution? All related requests will also be deleted. This action cannot be undone."
+    requests:
+      title: "Institution Requests"
+      create_new: "Create Request"
+      offers: "offers"
+      no_requests: "No requests"
+      no_requests_description: "This institution hasn't created any requests yet."
+      create_first: "Create First Request"
+
+  # Institution Members
+  institution_members:
+    roles:
+      member: "Member"
+      representative: "Representative"
+      admin: "Administrator"
+    index:
+      title: "Manage Members"
+      add_member: "Add Member"
+      current_members: "Current Members"
+    form:
+      user: "User"
+      user_id_placeholder: "User ID"
+      role: "Role"
+      position: "Position"
+      position_placeholder: "Social Worker"
+      add: "Add"
+    added: "Institution member added."
+    updated: "Role updated."
+    removed: "Institution member removed."
+    cannot_remove_last_admin: "Cannot remove the last administrator."
+    confirm_remove: "Remove this institution member?"
+
+  # Help Types
+  help_types:
+    general: "General Help"
+    specific_person: "Help for Specific Person"
+    volunteering: "Volunteering"
+    material_help: "Material Help"
+    educational: "Educational Help"
+    medical: "Medical Help"
+    entertainment: "Entertainment Events"
+
+  # Admin Panel - Institutions
+  admin:
+    institutions:
+      index:
+        title: "Institutions"
+        total: "Total"
+        verified: "Verified"
+        pending: "Pending"
+        search_placeholder: "Search by name or address..."
+        all_statuses: "All Statuses"
+        verified_only: "Verified"
+        pending_only: "Pending"
+        all_types: "All Types"
+        name: "Name"
+        type: "Type"
+        location: "Location"
+        status: "Status"
+        requests: "Requests"
+        actions: "Actions"
+      show:
+        details: "Details"
+        created_at: "Registration Date"
+        recent_requests: "Recent Requests"
+        no_requests: "No requests"
+        members: "Members"
+        verification_info: "Verification Info"
+        verified_at: "Verified At"
+        verify: "Verify"
+        unverify: "Revoke Verification"
+      verified: "Institution verified."
+      unverified: "Verification revoked."
+      destroyed: "Institution deleted."
+      confirm_verify: "Verify this institution?"
+      confirm_unverify: "Revoke verification?"
+      confirm_delete: "Delete this institution? This action cannot be undone."

@@ -1,0 +1,179 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+    <%= render 'requests/header', request: @request %>
+
+    <div class="bg-gray-50 dark:bg-gray-700 rounded-md p-4">
+      <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap"><%= @request.description %></p>
+    </div>
+
+    <%= render 'requests/action_buttons', request: @request %>
+  </div>
+
+  <%= render 'requests/chat_callout', request: @request, accepted_offer: @accepted_offer %>
+
+  <% if @offer %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4"><%= t('requests.show.want_to_help') %></h2>
+      <%= render 'offers/form', help_request: @request, offer: @offer %>
+    </div>
+  <% elsif user_signed_in? && current_user == @request.user %>
+    <div class="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-400 dark:border-blue-700 p-4 mb-6 rounded-md">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-blue-400 dark:text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-blue-700 dark:text-blue-300"><%= t('requests.show.own_request_msg') %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @reviews.any? %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <%= t('requests.show.reviews_title') %>
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">(<%= @reviews.count %>)</span>
+      </h2>
+
+      <div class="space-y-4">
+        <% @reviews.each do |review| %>
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <div class="flex items-center mb-1">
+              <% 5.times do |i| %>
+                <svg class="h-5 w-5 <%= i < review.rating ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600' %>" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              <% end %>
+            </div>
+
+            <% if review.comment.present? %>
+              <p class="text-sm text-gray-700 dark:text-gray-300 italic my-3">"<%= review.comment %>"</p>
+            <% end %>
+
+            <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+              <span class="font-medium">От: <%= review.reviewer.username %></span>
+              <span class="mx-1">•</span>
+              <span>Кому: <%= review.reviewee.username %></span>
+              <span class="mx-1">•</span>
+              <span><%= time_ago_in_words(review.created_at) %> <%= t('requests.show.ago') %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @request.completed? && user_signed_in? %>
+    <% if @request.user == current_user %>
+      <% reviewee = @request.accepted_offer&.user %>
+    <% else %>
+      <% reviewee = @request.user %>
+    <% end %>
+    
+    <% if reviewee %>
+      <% existing_review = @request.reviews.find_by(reviewer: current_user, reviewee: reviewee) %>
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4"><%= t('requests.show.leave_review', username: reviewee.username) %></h2>
+
+        <% if existing_review %>
+          <div class="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-400 dark:border-green-700 p-4 rounded-md">
+            <p class="text-sm text-green-700 dark:text-green-300"><%= t('requests.show.review_already_left') %></p>
+          </div>
+        <% else %>
+          <%= render 'reviews/form', request: @request, review: @request.reviews.new, reviewee: reviewee %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+      <%= t('requests.show.offers_title') %>
+      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">(<%= @offers.count %>)</span>
+    </h2>
+
+    <% if @offers.any? %>
+      <div class="space-y-4">
+        <% @offers.each do |offer| %>
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                    <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm">
+                      <%= offer.user.username[0].upcase %>
+                    </span>
+                  </div>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <%= link_to offer.user.username, user_path(offer.user.username), class: "text-indigo-600 dark:text-indigo-400 hover:underline" %>
+                    <span class="text-indigo-600 dark:text-indigo-400 font-semibold">(<%= offer.user.sawab_balance %> Sawab)</span>
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    <%= time_ago_in_words(offer.created_at) %> <%= t('requests.show.ago') %>
+                  </p>
+                </div>
+              </div>
+          
+              <%
+                offer_status_classes = case offer.status
+                when 'pending'
+                  'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                when 'accepted'
+                  'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                when 'rejected'
+                  'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
+                end
+              %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= offer_status_classes %>">
+                <%= t("offer_status.#{offer.status}") %>
+              </span>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-md p-3 mb-3">
+              <p class="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-wrap"><%= offer.message %></p>
+            </div>
+
+            <% if policy(offer).update? && offer.pending? %>
+              <div class="flex items-center gap-2">
+                <%= button_to offer_path(offer, status: 'accepted'),
+                    method: :patch,
+                    data: {
+                      turbo_confirm: t('requests.show.accept_confirm')
+                    },
+                    class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition" do %>
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <%= t('requests.show.accept') %>
+                <% end %>
+
+                <%= button_to offer_path(offer, status: 'rejected'),
+                    method: :patch,
+                    class: "inline-flex items-center px-3 py-1.5 border border-red-300 dark:border-red-600 text-xs font-medium rounded-md text-red-700 dark:text-red-400 bg-white dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition" do %>
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <%= t('requests.show.reject') %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100"><%= t('requests.show.no_offers') %></h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400"><%= t('requests.show.be_first') %></p>
+      </div>
+    <% end %>
+  </div>
+</div>

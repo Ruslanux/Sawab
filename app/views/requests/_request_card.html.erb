@@ -1,0 +1,67 @@
+<%# Fragment cache for request card - expires when request, user, or category changes %>
+<% cache [request, request.user, request.category, I18n.locale, request.offers_count] do %>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all overflow-hidden group">
+  <div class="p-5">
+    <!-- Header -->
+    <div class="flex items-start justify-between mb-3">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex-1 pr-4">
+        <%= link_to request.title, request_path(request), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline line-clamp-2" %>
+      </h2>
+
+      <div class="border <%= request_status_badge_class(request.status) %>">
+        <%= render 'shared/status_badge', status: request.status, type: :request %>
+      </div>
+    </div>
+
+    <!-- Metadata Row -->
+    <div class="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400 mb-3">
+      <%= render 'shared/metadata_item', icon: :tag, text: request.category.name %>
+      <%= render 'shared/metadata_item', icon: :user, text: request.user.username, link_to_path: user_path(request.user.username) %>
+      <%= render 'shared/metadata_item', icon: :clock, text: "#{time_ago_in_words(request.created_at)} #{t('requests.card.ago')}" %>
+
+      <% if request.region.present? || request.city.present? %>
+        <%= render 'shared/metadata_item', icon: :location, text: request.location_display %>
+      <% end %>
+
+      <% offers_count = request.total_offers_count %>
+      <% if offers_count > 0 %>
+        <%= render 'shared/metadata_item',
+            icon: :message,
+            text: "#{offers_count} #{t('requests.card.offers')}",
+            css_class: "flex items-center text-indigo-600 dark:text-indigo-400 font-medium" %>
+      <% end %>
+    </div>
+
+    <!-- Description -->
+    <p class="text-gray-700 dark:text-gray-300 line-clamp-2 mb-4"><%= request.description %></p>
+
+    <!-- Footer Actions -->
+    <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+      <div class="flex items-center gap-2">
+        <%= render 'shared/user_avatar', user: request.user, size: :small %>
+        <span class="text-sm text-gray-600 dark:text-gray-400"><%= request.user.username %></span>
+      </div>
+
+      <%= link_to request_path(request),
+          class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-all shadow hover:shadow-md" do %>
+        <%= t('requests.card.view_details') %>
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Hover Effect Border -->
+  <div class="h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+</div>
+<% end %>
+
+<style>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

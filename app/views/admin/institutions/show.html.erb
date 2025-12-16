@@ -1,0 +1,169 @@
+<div class="p-6">
+  <div class="flex justify-between items-start mb-6">
+    <div>
+      <div class="flex items-center gap-3 mb-2">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <%= @institution.name %>
+        </h1>
+        <% if @institution.verified? %>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <%= t('institutions.verified') %>
+          </span>
+        <% else %>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+            <%= t('institutions.pending_verification') %>
+          </span>
+        <% end %>
+      </div>
+      <p class="text-gray-600 dark:text-gray-400">
+        <%= t("institutions.types.#{@institution.institution_type}") %> |
+        <%= t('admin.institutions.show.created_at') %>: <%= l(@institution.created_at, format: :short) %>
+      </p>
+    </div>
+
+    <div class="flex gap-2">
+      <% if @institution.verified? %>
+        <%= button_to t('admin.institutions.show.unverify'), unverify_admin_institution_path(@institution),
+            method: :patch,
+            form: { data: { turbo_confirm: t('admin.institutions.confirm_unverify') } },
+            class: "px-4 py-2 bg-yellow-600 text-white rounded-lg font-medium hover:bg-yellow-700" %>
+      <% else %>
+        <%= button_to t('admin.institutions.show.verify'), verify_admin_institution_path(@institution),
+            method: :patch,
+            class: "px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700" %>
+      <% end %>
+      <%= button_to t('common.delete'), admin_institution_path(@institution),
+          method: :delete,
+          form: { data: { turbo_confirm: t('admin.institutions.confirm_delete') } },
+          class: "px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Info -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Details -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <%= t('admin.institutions.show.details') %>
+        </h2>
+
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t('institutions.director') %></dt>
+            <dd class="text-sm text-gray-900 dark:text-gray-100"><%= @institution.director_name %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t('institutions.phone') %></dt>
+            <dd class="text-sm text-gray-900 dark:text-gray-100"><%= @institution.phone %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t('institutions.email') %></dt>
+            <dd class="text-sm text-gray-900 dark:text-gray-100"><%= @institution.email || '-' %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t('institutions.website') %></dt>
+            <dd class="text-sm text-gray-900 dark:text-gray-100">
+              <% if @institution.website.present? %>
+                <%= link_to @institution.website, @institution.website, target: '_blank', class: 'text-indigo-600 hover:underline' %>
+              <% else %>
+                -
+              <% end %>
+            </dd>
+          </div>
+          <div class="md:col-span-2">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t('institutions.address') %></dt>
+            <dd class="text-sm text-gray-900 dark:text-gray-100"><%= @institution.full_address %></dd>
+          </div>
+          <% if @institution.description.present? %>
+            <div class="md:col-span-2">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t('institutions.about') %></dt>
+              <dd class="text-sm text-gray-900 dark:text-gray-100 whitespace-pre-line"><%= @institution.description %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+
+      <!-- Recent Requests -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+            <%= t('admin.institutions.show.recent_requests') %> (<%= @requests_count %>)
+          </h2>
+        </div>
+
+        <% if @requests.any? %>
+          <div class="space-y-3">
+            <% @requests.each do |request| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <div>
+                  <%= link_to request.title, admin_request_path(request), class: "font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600" %>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <%= l(request.created_at, format: :short) %>
+                  </div>
+                </div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= case request.status
+                      when 'open' then 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      when 'in_progress' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                      when 'completed' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      else 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                      end %>">
+                  <%= t("requests.statuses.#{request.status}") %>
+                </span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500 dark:text-gray-400 text-center py-4">
+            <%= t('admin.institutions.show.no_requests') %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      <!-- Members -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <%= t('admin.institutions.show.members') %> (<%= @members.count %>)
+        </h2>
+
+        <div class="space-y-3">
+          <% @members.each do |member| %>
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-medium mr-3">
+                <%= member.user.username[0].upcase %>
+              </div>
+              <div class="flex-1">
+                <%= link_to member.user.username, admin_user_path(member.user), class: "text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600" %>
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  <%= t("institution_members.roles.#{member.role}") %>
+                  <% if member.position.present? %>
+                    - <%= member.position %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Verification Info -->
+      <% if @institution.verified? %>
+        <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
+          <h3 class="text-sm font-medium text-emerald-800 dark:text-emerald-200 mb-2">
+            <%= t('admin.institutions.show.verification_info') %>
+          </h3>
+          <p class="text-sm text-emerald-700 dark:text-emerald-300">
+            <%= t('admin.institutions.show.verified_at') %>: <%= l(@institution.verified_at, format: :short) %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

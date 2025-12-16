@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+  <h2>Запрос завершён! ⭐</h2>
+  
+  <p>Здравствуйте, <%= @recipient.username %>!</p>
+  
+  <p>
+    Запрос "<%= @request.title %>" был завершён пользователем 
+    <strong><%= @actor.username %></strong>.
+  </p>
+  
+  <p>
+    <strong>Вам начислен 1 Sawab балл!</strong> 🌟
+  </p>
+  
+  <p>
+    Спасибо за вашу помощь и участие в сообществе Sawab!
+  </p>
+  
+  <p>
+    <%= link_to 'Посмотреть запрос', request_url(@request), 
+        style: 'background-color: #4F46E5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;' %>
+  </p>
+  
+  <p>
+    С уважением,<br>
+    Команда Sawab
+  </p>
+</body>
+</html>

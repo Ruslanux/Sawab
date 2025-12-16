@@ -1,0 +1,25 @@
+# Пароль для всех: 'password'
+DEFAULTS: &DEFAULTS
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+  confirmed_at: <%= Time.current %>  # Email подтвержден для тестов
+  sawab_balance: 0
+  location: "Test City"
+  role: user
+
+one:
+  <<: *DEFAULTS
+  username: UserOne
+  email: user_one@example.com  # Уникальный email
+
+two:
+  <<: *DEFAULTS
+  username: UserTwo
+  email: user_two@example.com  # Уникальный email
+
+admin:
+  <<: *DEFAULTS
+  username: AdminUser
+  email: admin@example.com     # Уникальный email
+  role: admin

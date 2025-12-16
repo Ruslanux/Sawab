@@ -1,0 +1,82 @@
+# PostgreSQL configuration for Sawab
+#
+# For production, we recommend using a managed database service:
+#   - DigitalOcean Managed Databases
+#   - AWS RDS
+#   - Supabase
+#   - Railway
+#   - Render
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: sawab_development
+  # Uncomment these for local development with custom credentials:
+  # username: sawab
+  # password: <%= ENV["SAWAB_DATABASE_PASSWORD"] %>
+  # host: localhost
+  # port: 5432
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run tests.
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: sawab_test
+
+# Production database configuration
+# ==================================
+# Option 1: Use DATABASE_URL environment variable (recommended for most DBaaS)
+#   Set DATABASE_URL="postgres://user:password@host:5432/sawab_production"
+#
+# Option 2: Use individual environment variables (current setup)
+#   Set DB_HOST, SAWAB_DATABASE_PASSWORD, etc.
+#
+# The configuration below supports both options - DATABASE_URL takes precedence if set.
+
+production:
+  primary: &primary_production
+    <<: *default
+    # Use DATABASE_URL if provided, otherwise use individual settings
+    url: <%= ENV["DATABASE_URL"] %>
+    database: <%= ENV.fetch("DB_NAME", "sawab_production") %>
+    username: <%= ENV.fetch("DB_USER", "sawab") %>
+    password: <%= ENV["SAWAB_DATABASE_PASSWORD"] %>
+    host: <%= ENV["DB_HOST"] %>
+    port: <%= ENV.fetch("DB_PORT", 5432) %>
+    # Connection pool size (match RAILS_MAX_THREADS)
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    # SSL mode for production databases (required for most DBaaS)
+    sslmode: <%= ENV.fetch("DB_SSLMODE", "require") %>
+    # Connection timeout settings
+    connect_timeout: 5
+    # Prepared statements (disable for PgBouncer in transaction mode)
+    prepared_statements: <%= ENV.fetch("DB_PREPARED_STATEMENTS", "true") == "true" %>
+    # Query timeout to prevent long-running queries (30 seconds)
+    variables:
+      statement_timeout: <%= ENV.fetch("DB_STATEMENT_TIMEOUT", "30000") %>
+      idle_in_transaction_session_timeout: <%= ENV.fetch("DB_IDLE_TRANSACTION_TIMEOUT", "60000") %>
+
+  # Solid Cache database (can use same connection as primary)
+  cache:
+    <<: *primary_production
+    database: <%= ENV.fetch("DB_CACHE_NAME", "sawab_production_cache") %>
+    migrations_paths: db/cache_migrate
+
+  # Solid Queue database (can use same connection as primary)
+  queue:
+    <<: *primary_production
+    database: <%= ENV.fetch("DB_QUEUE_NAME", "sawab_production_queue") %>
+    migrations_paths: db/queue_migrate
+
+  # Solid Cable database (can use same connection as primary)
+  cable:
+    <<: *primary_production
+    database: <%= ENV.fetch("DB_CABLE_NAME", "sawab_production_cable") %>
+    migrations_paths: db/cable_migrate

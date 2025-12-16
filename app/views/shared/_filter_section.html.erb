@@ -1,0 +1,15 @@
+<%
+  # Usage: render 'shared/filter_section', icon: :check_circle, title: t('filters.status') do
+  #          ... content ...
+  #        end
+  icon ||= :filter
+  title ||= "Filter"
+%>
+
+<div>
+  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+    <%= icon_tag(icon, class: "w-4 h-4 inline mr-1") %>
+    <%= title %>
+  </label>
+  <%= yield %>
+</div>

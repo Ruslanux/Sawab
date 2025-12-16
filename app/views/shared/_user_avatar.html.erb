@@ -1,0 +1,27 @@
+<%
+  # Usage: render 'shared/user_avatar', user: @user, size: :small
+  size ||= :small
+
+  size_classes = case size
+  when :thumb
+    "w-6 h-6 text-xs"
+  when :small
+    "w-8 h-8 text-sm"
+  when :medium
+    "w-12 h-12 text-base"
+  when :large
+    "w-16 h-16 text-xl"
+  else
+    "w-8 h-8 text-sm"
+  end
+%>
+
+<% if user.profile_picture.attached? %>
+  <%= image_tag user.avatar_url(size: size),
+      class: "#{size_classes} rounded-full object-cover border-2 border-indigo-200 dark:border-indigo-700",
+      alt: user.username %>
+<% else %>
+  <div class="<%= size_classes %> rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold border-2 border-indigo-200 dark:border-indigo-700">
+    <%= user.username[0].upcase %>
+  </div>
+<% end %>

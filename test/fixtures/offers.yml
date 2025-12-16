@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  request: one
+  user: two
+  message: "I can help you with this!"
+  status: accepted
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+two:
+  request: two
+  user: one
+  message: "Let me assist you"
+  status: pending
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>

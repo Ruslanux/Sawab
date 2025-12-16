@@ -1,0 +1,47 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Диалоги с Администрацией</h1>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+      <% if @threads.any? %>
+        <% @threads.each do |admin_id, messages| %>
+          <% admin = User.find(admin_id) %>
+          <% last_message = messages.first %>
+
+          <%# 'unread?' теперь вызывается у 'last_message' %>
+          <li class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <%= link_to admin_message_path(id: admin.id), class: "block p-6 #{last_message.unread? && last_message.recipient_id == current_user.id ? 'bg-blue-50 dark:bg-blue-900/30' : ''}" do %>
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                  <div class="h-10 w-10 rounded-full bg-indigo-600 dark:bg-indigo-700 flex items-center justify-center">
+                    <span class="text-white font-semibold"><%= admin.username[0].upcase %></span>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      <%= admin.username %> (Администратор)
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                      <%= time_ago_in_words(last_message.created_at) %> назад
+                    </p>
+                  </div>
+                  <div class="mt-1 text-sm text-gray-700 dark:text-gray-300 truncate">
+                    <% if last_message.sender == current_user %>
+                      <span class="font-medium">Вы:</span>
+                    <% end %>
+                    <%= last_message.body %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      <% else %>
+        <li class="p-12 text-center text-gray-500 dark:text-gray-400">
+          У вас нет сообщений от администрации.
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

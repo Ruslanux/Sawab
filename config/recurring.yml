@@ -1,0 +1,80 @@
+# Solid Queue Recurring Tasks Configuration
+# https://github.com/rails/solid_queue#recurring-tasks
+#
+# Schedule format examples:
+#   - every second
+#   - every 5 minutes
+#   - every hour at minute 30
+#   - every day at 9am
+#   - every Monday at 12:00
+#   - every 1st of month at midnight
+
+# Development environment - minimal tasks for testing
+development:
+  # Test cleanup job every 5 minutes
+  cleanup_notifications:
+    class: CleanupNotificationsJob
+    schedule: every 5 minutes
+
+# Production environment - full schedule
+production:
+  # ============================================
+  # SOLID QUEUE MAINTENANCE
+  # ============================================
+  # Clean up finished jobs from the queue
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every hour at minute 12
+
+  # ============================================
+  # DISPUTE & REQUEST MANAGEMENT
+  # ============================================
+  # Escalate unresolved disputes to admins (daily at 9am)
+  dispute_escalation:
+    class: DisputeEscalationJob
+    schedule: every day at 9am
+
+  # Auto-complete requests stuck in pending_completion (daily at 10am)
+  auto_complete_requests:
+    class: AutoCompleteRequestsJob
+    schedule: every day at 10am
+
+  # Remind helpers about inactive requests (daily at 11am)
+  inactive_request_reminders:
+    class: InactiveRequestReminderJob
+    schedule: every day at 11am
+
+  # ============================================
+  # CLEANUP & MAINTENANCE
+  # ============================================
+  # Clean up old read notifications (daily at 3am)
+  cleanup_notifications:
+    class: CleanupNotificationsJob
+    schedule: every day at 3am
+
+  # Database maintenance tasks (daily at 4am)
+  database_maintenance:
+    class: DatabaseMaintenanceJob
+    schedule: every day at 4am
+
+# Staging environment - same as production but less frequent
+staging:
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every 2 hours
+
+  dispute_escalation:
+    class: DisputeEscalationJob
+    schedule: every day at 9am
+
+  auto_complete_requests:
+    class: AutoCompleteRequestsJob
+    schedule: every day at 10am
+
+  cleanup_notifications:
+    class: CleanupNotificationsJob
+    schedule: every day at 3am
+
+  database_maintenance:
+    class: DatabaseMaintenanceJob
+    schedule: every day at 4am

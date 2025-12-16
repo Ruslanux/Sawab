@@ -1,0 +1,267 @@
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  <!-- Profile Header Card -->
+  <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-xl overflow-hidden mb-8">
+    <div class="px-6 py-8 sm:p-10">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+        <!-- Avatar -->
+        <div class="flex-shrink-0">
+          <% if @user.profile_picture.attached? %>
+            <%= image_tag @user.profile_picture.variant(resize_to_limit: [128, 128]), 
+                class: "h-24 w-24 sm:h-32 sm:w-32 rounded-full object-cover shadow-lg ring-4 ring-white ring-opacity-50" %>
+          <% else %>
+            <div class="h-24 w-24 sm:h-32 sm:w-32 rounded-full bg-white flex items-center justify-center shadow-lg ring-4 ring-white ring-opacity-50">
+              <span class="text-4xl sm:text-5xl font-bold text-indigo-600">
+                <%= @user.username[0].upcase %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- User Info -->
+        <div class="flex-1 text-center sm:text-left text-white">
+          <h1 class="text-3xl sm:text-4xl font-bold mb-2"><%= @user.username %></h1>
+          
+          <div class="flex flex-wrap gap-4 justify-center sm:justify-start text-sm opacity-90 mb-4">
+            <div class="flex items-center gap-1">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span><%= t('users.profile.joined') %> <%= l(@user.created_at, format: :long_date_only) %></span>
+            </div>
+            
+            <% if @user.location.present? %>
+              <div class="flex items-center gap-1">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span><%= @user.location %></span>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="inline-flex items-center gap-3 bg-yellow-400 dark:bg-yellow-500 rounded-full px-6 py-3 mb-4 shadow-lg">
+            <svg class="h-7 w-7 text-yellow-900 dark:text-yellow-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+            <div>
+              <div class="text-xs uppercase tracking-wide font-bold text-yellow-900 dark:text-yellow-950"><%= t('users.profile.sawab_balance') %></div>
+              <div class="text-3xl font-bold text-yellow-900 dark:text-yellow-950"><%= @user.sawab_balance %></div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center sm:justify-start gap-4">
+            <% if user_signed_in? && current_user == @user %>
+              <%= link_to edit_profile_path,
+                  class: "inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition shadow-md" do %>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <%= t('users.profile.edit_profile') %>
+              <% end %>
+            <% elsif user_signed_in? %>
+              <%= link_to new_report_path(reportable_type: 'User', reportable_id: @user.id),
+                  class: "inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition shadow-md" do %>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6H5a2 2 0 00-2 2zm0 0h18"></path>
+                </svg>
+                <%= t('users.profile.report_user') %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-t-4 border-blue-500 dark:border-blue-600">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 font-medium"><%= t('users.profile.total_requests') %></p>
+          <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1"><%= @user.requests.count %></p>
+        </div>
+        <div class="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+          <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-t-4 border-green-500 dark:border-green-600">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 font-medium"><%= t('users.profile.total_offers') %></p>
+          <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1"><%= @user.offers.count %></p>
+        </div>
+        <div class="h-12 w-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+          <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-t-4 border-purple-500 dark:border-purple-600">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 font-medium"><%= t('users.profile.accepted_offers') %></p>
+          <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1"><%= @user.offers.accepted.count %></p>
+        </div>
+        <div class="h-12 w-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+          <svg class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6"><%= t('users.profile.badges_title', count: @user_badges.count) %></h2>
+    
+    <% if @user_badges.any? %>
+      <div class="flex flex-wrap gap-x-4 gap-y-2">
+        
+        <% @user_badges.each do |user_badge| %>
+          <%# --- ИЗМЕНЕНИЕ ЗДЕСЬ: --- %>
+          <%# Передаем 'user_badge' в партиал, используя правильное имя локальной переменной %>
+          <%= render 'badges/badge', user_badge: user_badge %>
+        <% end %>
+        
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-gray-500 dark:text-gray-400"><%= t('users.profile.no_badges') %></p>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100"><%= t('users.profile.reviews_received_title') %></h2>
+      <span class="text-sm text-gray-500 dark:text-gray-400"><%= @user_reviews_received.count %> <%= t('users.profile.of') %> <%= @user.reviews_received.count %></span>
+    </div>
+    
+    <% if @user_reviews_received.any? %>
+      <div class="space-y-4">
+        <% @user_reviews_received.each do |review| %>
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <div class="mb-1">
+              <%= render 'shared/star_rating', rating: review.rating %>
+            </div>
+
+            <% if review.comment.present? %>
+              <p class="text-sm text-gray-700 dark:text-gray-300 italic my-3">"<%= review.comment %>"</p>
+            <% end %>
+
+            <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+              <span class="font-medium"><%= t('users.profile.by') %> <%= review.reviewer.username %></span>
+              <span>•</span>
+              <span><%= t('users.profile.for_label') %> <%= link_to review.request.title.truncate(40), request_path(review.request), class: "text-indigo-600 dark:text-indigo-400 hover:underline" %></span>
+              <span class="hidden sm:inline">•</span>
+              <span class="w-full sm:w-auto text-right sm:text-left"><%= time_ago_in_words(review.created_at) %> <%= t('users.profile.ago') %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+        </svg>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400"><%= t('users.profile.no_reviews') %></p>
+      </div>
+    <% end %>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100"><%= t('users.profile.recent_requests_title') %></h2>
+        <span class="text-sm text-gray-500 dark:text-gray-400"><%= @user_requests.count %> <%= t('users.profile.of') %> <%= @user.requests.count %></span>
+      </div>
+      
+      <% if @user_requests.any? %>
+        <div class="space-y-3">
+          <% @user_requests.each do |req| %>
+            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition">
+              <%= link_to request_path(req), class: "block" do %>
+                <h3 class="font-semibold text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition mb-2">
+                  <%= req.title %>
+                </h3>
+                <div class="flex flex-wrap gap-2 text-xs">
+                  <% 
+                    status_class = case req.status
+                    when 'open' then 'bg-green-100 text-green-800'
+                    when 'in_progress' then 'bg-blue-100 text-blue-800'
+                    when 'completed' then 'bg-gray-100 text-gray-800'
+                    when 'cancelled' then 'bg-red-100 text-red-800'
+                    end
+                  %>
+                  <span class="px-2 py-1 rounded-full <%= status_class %> font-medium">
+                    <%= t("request_status.#{req.status}") %>
+                  </span>
+                  <span class="px-2 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 font-medium">
+                    <%= req.category.name %>
+                  </span>
+                  <span class="text-gray-500 dark:text-gray-400">
+                    <%= time_ago_in_words(req.created_at) %> <%= t('users.profile.ago') %>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400"><%= t('users.profile.no_requests') %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100"><%= t('users.profile.recent_offers_title') %></h2>
+        <span class="text-sm text-gray-500 dark:text-gray-400"><%= @user_offers.count %> <%= t('users.profile.of') %> <%= @user.offers.count %></span>
+      </div>
+      
+      <% if @user_offers.any? %>
+        <div class="space-y-3">
+          <% @user_offers.each do |offer| %>
+            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition">
+              <p class="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-2"><%= offer.message %></p>
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="text-gray-500 dark:text-gray-400"><%= t('users.profile.for_label') %></span>
+                <%= link_to offer.request.title, request_path(offer.request),
+                    class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium hover:underline" %>
+                <span class="mx-1">•</span>
+                <%
+                  offer_status_class = case offer.status
+                  when 'pending' then 'bg-yellow-100 text-yellow-800'
+                  when 'accepted' then 'bg-green-100 text-green-800'
+                  when 'rejected' then 'bg-red-100 text-red-800'
+                  end
+                %>
+                <span class="px-2 py-1 rounded-full <%= offer_status_class %> font-medium">
+                  <%= t("offer_status.#{offer.status}") %>
+                </span>
+                <span class="text-gray-500 dark:text-gray-400 ml-auto">
+                  <%= time_ago_in_words(offer.created_at) %> <%= t('users.profile.ago') %>
+                </span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400"><%= t('users.profile.no_offers') %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

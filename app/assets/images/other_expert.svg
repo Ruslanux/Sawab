@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Star shape for "other/general" expert -->
+  <polygon points="50,15 61,40 90,40 67,58 76,85 50,68 24,85 33,58 10,40 39,40" fill="#6366F1"/>
+  <!-- Inner star highlight -->
+  <polygon points="50,28 56,42 72,42 60,52 65,68 50,58 35,68 40,52 28,42 44,42" fill="#818CF8"/>
+</svg>

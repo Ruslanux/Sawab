@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+/* Define dark mode variant - Tailwind v4 way */
+@custom-variant dark (.dark &);

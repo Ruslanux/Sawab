@@ -1,0 +1,192 @@
+<%= form_with(model: @request, local: true, class: "space-y-6") do |form| %>
+  <% if @request.errors.any? %>
+    <div class="rounded-md bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400 dark:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+            <%= pluralize(@request.errors.count, "error") %> prohibited this request from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-400">
+            <ul class="list-disc pl-5 space-y-1">
+              <% @request.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Title Field -->
+  <div>
+    <%= form.label :title, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+      <span class="flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+        </svg>
+        <%= t('requests.new.title_label') %> <span class="text-red-500">*</span>
+      </span>
+    <% end %>
+    <%= form.text_field :title,
+        class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm #{@request.errors[:title].any? ? 'border-red-300' : ''}",
+        placeholder: t('requests.new.title_placeholder'),
+        maxlength: 100 %>
+    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t('requests.new.title_help') %></p>
+  </div>
+
+  <!-- Category Field -->
+  <div>
+    <%= form.label :category_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+      <span class="flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+        </svg>
+        <%= t('requests.new.category_label') %> <span class="text-red-500">*</span>
+      </span>
+    <% end %>
+    <%= form.select :category_id,
+        options_for_select(@categories.map { |c| [c.name, c.id] }, @request.category_id),
+        { include_blank: t('requests.new.category_placeholder') },
+        class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm #{@request.errors[:category_id].any? ? 'border-red-300' : ''}" %>
+  </div>
+
+  <!-- Description Field -->
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+      <span class="flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <%= t('requests.new.description_label') %> <span class="text-red-500">*</span>
+      </span>
+    <% end %>
+    <%= form.text_area :description,
+        rows: 5,
+        class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm #{@request.errors[:description].any? ? 'border-red-300' : ''}",
+        placeholder: t('requests.new.description_placeholder') %>
+    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t('requests.new.description_help') %></p>
+  </div>
+
+  <!-- Institution Section (only if creating from institution or request has institution) -->
+  <% if @institution || @request.institution_id.present? %>
+    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        <%= t('requests.form.institution_section') %>
+      </h3>
+
+      <% institution = @institution || @request.institution %>
+      <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4 mb-4">
+        <p class="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+          <%= institution.name %>
+        </p>
+        <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+          <%= t("institutions.types.#{institution.institution_type}") %> | <%= institution.full_address %>
+        </p>
+      </div>
+
+      <%= form.hidden_field :institution_id, value: institution.id %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Author Name -->
+        <div>
+          <%= form.label :author_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            <%= t('requests.form.author_name') %> <span class="text-red-500">*</span>
+          <% end %>
+          <%= form.text_field :author_name,
+              class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm",
+              placeholder: t('requests.form.author_name_placeholder') %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t('requests.form.author_name_help') %></p>
+        </div>
+
+        <!-- Help Type -->
+        <div>
+          <%= form.label :help_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            <%= t('requests.form.help_type') %>
+          <% end %>
+          <%= form.select :help_type,
+              Request.help_types.keys.map { |type| [t("help_types.#{type}"), type] },
+              {},
+              class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" %>
+        </div>
+      </div>
+
+      <!-- Beneficiary Info (optional) -->
+      <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <%= t('requests.form.beneficiary_section') %>
+        </h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+          <%= t('requests.form.beneficiary_help') %>
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= form.label :beneficiary_name, t('requests.form.beneficiary_name'), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+            <%= form.text_field :beneficiary_name,
+                class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm",
+                placeholder: t('requests.form.beneficiary_name_placeholder') %>
+          </div>
+          <div>
+            <%= form.label :beneficiary_age, t('requests.form.beneficiary_age'), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+            <%= form.number_field :beneficiary_age,
+                class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm",
+                min: 1, max: 150,
+                placeholder: t('requests.form.beneficiary_age_placeholder') %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Location Section -->
+  <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      <%= t('requests.new.location_title') %>
+    </h3>
+    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4"><%= t('requests.new.location_help') %></p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Region Field -->
+      <div>
+        <%= form.label :region, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+          <%= t('requests.new.region_label') %> <span class="text-red-500">*</span>
+        <% end %>
+        <%= form.select :region,
+            options_for_select(I18n.t('regions').map { |k, v| [v, k.to_s] }, @request.region),
+            { include_blank: t('requests.new.region_placeholder') },
+            class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm #{@request.errors[:region].any? ? 'border-red-300' : ''}" %>
+      </div>
+
+      <!-- City Field -->
+      <div>
+        <%= form.label :city, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+          <%= t('requests.new.city_label') %> <span class="text-red-500">*</span>
+        <% end %>
+        <%= form.text_field :city,
+            class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm #{@request.errors[:city].any? ? 'border-red-300' : ''}",
+            placeholder: t('requests.new.city_placeholder') %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+    <%= link_to t('requests.new.cancel'), requests_path,
+        class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition" %>
+
+    <%= form.submit (@request.new_record? ? t('requests.new.create') : 'Update Request'),
+        class: "inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition" %>
+  </div>
+<% end %>

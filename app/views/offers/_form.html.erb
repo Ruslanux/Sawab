@@ -1,0 +1,50 @@
+<%# Используем локальные переменные или инстанс-переменные %>
+<% 
+  # Определяем переменные для формы
+  help_request = local_assigns[:help_request] || @request
+  offer_form = local_assigns[:offer] || @offer
+%>
+
+<%= form_with(model: [help_request, offer_form], local: true, class: "space-y-4") do |form| %>
+  <%# Отображение ошибок offer %>
+  <% if offer_form.errors.any? %>
+    <div id="error_explanation_offer" class="bg-red-50 border-l-4 border-red-400 text-red-800 px-4 py-3 rounded-md mb-4" role="alert">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-semibold">
+            <%= pluralize(offer_form.errors.count, "error") %> prohibited this offer from being saved:
+          </p>
+          <ul class="list-disc list-inside mt-2 text-sm space-y-1">
+            <% offer_form.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="space-y-2">
+    <%= form.label :message, t('requests.show.offer_message_label'), class: "block text-sm font-semibold text-gray-700 dark:text-gray-200" %>
+    <%= form.text_area :message,
+        rows: 5,
+        class: "mt-1 block w-full rounded-md border-2 border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400 sm:text-sm transition placeholder-gray-400 dark:placeholder-gray-400",
+        placeholder: t('requests.show.offer_message_placeholder') %>
+    <p class="text-xs text-gray-500 dark:text-gray-400"><%= t('requests.show.offer_message_help') %></p>
+  </div>
+
+  <div class="flex items-center justify-between pt-2">
+    <%= form.submit t('requests.show.submit_offer'),
+        class: "inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+        data: { disable_with: "Submitting..." } %>
+    
+    <% if offer_form.persisted? %>
+      <%= link_to "Cancel", help_request, class: "text-sm text-gray-600 hover:text-gray-800 transition" %>
+    <% end %>
+  </div>
+<% end %>

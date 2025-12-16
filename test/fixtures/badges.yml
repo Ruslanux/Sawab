@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+first_helper:
+  name: "First Helper"
+  description: "Completed your first request"
+  icon_name: "helper"
+
+ten_requests:
+  name: "10 Requests"
+  description: "Completed 10 requests"
+  icon_name: "helper"

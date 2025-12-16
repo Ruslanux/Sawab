@@ -1,0 +1,10 @@
+<%
+  # Usage: render 'shared/status_badge', status: @request.status, type: :request
+  #        render 'shared/status_badge', status: @offer.status, type: :offer
+  type ||= :request
+  badge_class = type == :offer ? offer_status_badge_class(status) : request_status_badge_class(status)
+  translation_key = type == :offer ? "offer_status.#{status}" : "request_status.#{status}"
+%>
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= badge_class %>">
+  <%= t(translation_key) %>
+</span>

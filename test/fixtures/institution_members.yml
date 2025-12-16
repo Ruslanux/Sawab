@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+one_admin:
+  user: one
+  institution: one
+  role: 2  # admin
+  position: "Директор"
+
+one_representative:
+  user: two
+  institution: one
+  role: 1  # representative
+  position: "Социальный работник"
+
+three_admin:
+  user: one
+  institution: three
+  role: 2  # admin
+  position: "Администратор"

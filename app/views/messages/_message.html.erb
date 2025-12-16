@@ -1,0 +1,57 @@
+<% viewing_user_id = local_assigns[:viewing_user_id] %>
+<% is_current_user = viewing_user_id ? (message.user_id == viewing_user_id) : false %>
+
+<div class="flex <%= is_current_user ? 'justify-end' : 'justify-start' %> mb-4" 
+     data-message-id="<%= message.id %>"
+     data-user-id="<%= message.user_id %>">
+  <div class="flex items-end space-x-2 max-w-xs lg:max-w-md">
+    
+    <% unless is_current_user %>
+      <!-- Avatar for other user -->
+      <div class="flex-shrink-0 mb-1">
+        <% if message.user.profile_picture.attached? %>
+          <%= image_tag message.user.avatar_url(size: :small), 
+              class: "h-8 w-8 rounded-full object-cover" %>
+        <% else %>
+          <div class="h-8 w-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-300 text-xs font-semibold">
+            <%= message.user.username[0].upcase %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Message bubble -->
+    <div class="flex flex-col">
+      <div class="px-4 py-2 rounded-lg <%= is_current_user ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none' %>">
+        <% unless is_current_user %>
+          <p class="text-xs font-semibold mb-1 <%= is_current_user ? 'text-blue-200' : 'text-gray-600 dark:text-gray-300' %>">
+            <%= message.user.username %>
+          </p>
+        <% end %>
+        
+        <p class="text-sm whitespace-pre-wrap break-words">
+          <%= message.body %>
+        </p>
+      </div>
+      
+      <!-- Timestamp -->
+      <p class="text-xs mt-1 <%= is_current_user ? 'text-right' : 'text-left' %> text-gray-500 dark:text-gray-400">
+        <%= message.created_at.in_time_zone('Almaty').strftime("%H:%M") %>
+      </p>
+    </div>
+
+    <% if is_current_user %>
+      <!-- Avatar for current user -->
+      <div class="flex-shrink-0 mb-1">
+        <% if message.user.profile_picture.attached? %>
+          <%= image_tag message.user.avatar_url(size: :small), 
+              class: "h-8 w-8 rounded-full object-cover" %>
+        <% else %>
+          <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold">
+            <%= message.user.username[0].upcase %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

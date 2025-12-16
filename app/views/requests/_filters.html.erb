@@ -1,0 +1,283 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-4 border border-gray-200 dark:border-gray-700">
+  <!-- Header with Clear Filters -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
+      <svg class="w-6 h-6 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+      </svg>
+      <%= t('filters.title') %>
+    </h2>
+    
+    <% if params.to_unsafe_h.except('controller', 'action', 'page', 'locale').present? %>
+      <%= link_to requests_path,
+          class: "flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors" do %>
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <%= t('filters.clear_all') %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= form_with url: requests_path, method: :get, local: true, class: "space-y-6" do |f| %>
+
+    <%= render 'shared/search_input', value: params[:q], placeholder: t('filters.search_placeholder') %>
+    
+    <!-- Type Filter: Requests vs Offers -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <%= t('filters.view_type') %>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <%= link_to requests_path(type: 'requests', status: @status, time_period: @time_period, category_id: @category_id, region: @region, city: @city, q: params[:q]),
+            class: "group relative flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-all #{@type == 'requests' ? 'bg-indigo-600 text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <%= t('filters.requests') %>
+        <% end %>
+
+        <%= link_to requests_path(type: 'offers', status: @status, time_period: @time_period, q: params[:q]),
+            class: "group relative flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-all #{@type == 'offers' ? 'bg-green-600 text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          <%= t('filters.my_offers') %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+    <%= render 'shared/filter_section', icon: :check_circle, title: t('filters.status') do %>
+      <% if @type == 'requests' %>
+        <div class="grid grid-cols-2 gap-2">
+          <% [
+            [t('filters.all'), nil, 'gray'],
+            [t('filters.open'), 'open', 'green'],
+            [t('filters.in_progress'), 'in_progress', 'blue'],
+            [t('filters.completed'), 'completed', 'purple'],
+            [t('filters.cancelled'), 'cancelled', 'red']
+          ].each do |label, value, color| %>
+            <%= render 'shared/filter_button',
+                label: label,
+                path: requests_path(type: @type, status: value, time_period: @time_period, category_id: @category_id, region: @region, city: @city, q: params[:q]),
+                active: (value.nil? ? @status.blank? : @status == value),
+                color: color %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="grid grid-cols-2 gap-2">
+          <% [
+            [t('filters.all'), nil, 'gray'],
+            [t('filters.pending'), 'pending', 'yellow'],
+            [t('filters.accepted'), 'accepted', 'green'],
+            [t('filters.rejected'), 'rejected', 'red']
+          ].each do |label, value, color| %>
+            <%= render 'shared/filter_button',
+                label: label,
+                path: requests_path(type: @type, status: value, time_period: @time_period, q: params[:q]),
+                active: (value.nil? ? @status.blank? : @status == value),
+                color: color %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% if @type == 'requests' %>
+      <!-- Divider -->
+      <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+      <!-- Category Filter -->
+      <div>
+        <label for="category_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+          </svg>
+          <%= t('filters.category') %>
+        </label>
+        <%= select_tag :category_id,
+            options_for_select([[t('filters.all_categories'), '']] + @categories.map { |c| [c.name, c.id] }, @category_id),
+            class: "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent",
+            onchange: "this.form.submit()" %>
+      </div>
+    <% end %>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+    <%= render 'shared/filter_section', icon: :clock, title: t('filters.time_period') do %>
+      <div class="grid grid-cols-2 gap-2">
+        <% [
+          [t('filters.today'), 'today', 'green'],
+          [t('filters.this_week'), 'week', 'blue'],
+          [t('filters.this_month'), 'month', 'purple'],
+          [t('filters.all_time'), 'all', 'gray']
+        ].each do |label, value, color| %>
+          <%= render 'shared/filter_button',
+              label: label,
+              path: requests_path(type: @type, status: @status, time_period: value, category_id: @category_id, region: @region, city: @city, q: params[:q]),
+              active: (@time_period.presence || 'all') == value,
+              color: color %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @type == 'requests' %>
+      <!-- Divider -->
+      <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+      <!-- Location Filters -->
+      <div class="space-y-4">
+        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+          <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <%= t('filters.location') %>
+        </label>
+
+        <!-- Region Filter -->
+        <div>
+          <label for="region" class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"><%= t('filters.region') %></label>
+          <%= select_tag :region,
+              options_for_select([[t('filters.all_regions'), '']] + I18n.t('regions').map { |k, v| [v, k.to_s] }, @region),
+              class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm",
+              onchange: "this.form.submit()" %>
+        </div>
+
+        <!-- City Input -->
+        <div>
+          <label for="city" class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"><%= t('filters.city') %></label>
+          <%= text_field_tag :city, @city,
+              placeholder: t('filters.city_placeholder'),
+              class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" %>
+        </div>
+
+        <!-- Apply Button -->
+        <button type="submit" class="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl">
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <%= t('filters.apply_filters') %>
+        </button>
+      </div>
+    <% else %>
+      <!-- Apply Button for Offers -->
+      <button type="submit" class="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow-lg hover:shadow-xl">
+        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <%= t('filters.apply_filters') %>
+      </button>
+    <% end %>
+
+    <!-- Hidden fields to preserve filters -->
+    <%= hidden_field_tag :type, @type %>
+  <% end %>
+
+  <!-- Active Filters Summary -->
+  <% has_filters = params[:q].present? || @status.present? || (@category_id.present? && @type == 'requests') || (@time_period.present? && @time_period != 'all') || @region.present? || @city.present? %>
+  <% if has_filters %>
+    <div class="mt-6 pt-6 border-t border-gray-200">
+      <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+        </svg>
+        <%= t('filters.active_filters') %>
+      </p>
+      <div class="flex flex-wrap gap-2">
+        <% if params[:q].present? %>
+          <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
+            <%= t('filters.search_label') %> "<%= params[:q] %>"
+            <%= link_to requests_path(params.to_unsafe_h.except('q')), class: "ml-1.5 text-blue-600 hover:text-blue-900" do %>
+              <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            <% end %>
+          </span>
+        <% end %>
+        
+        <% if @status.present? %>
+          <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 border border-indigo-200">
+            <%= t('filters.status_label') %> <%= t("request_status.#{@status}") %>
+            <%= link_to requests_path(params.to_unsafe_h.except('status')), class: "ml-1.5 text-indigo-600 hover:text-indigo-900" do %>
+              <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            <% end %>
+          </span>
+        <% end %>
+        
+        <% if @category_id.present? && @type == 'requests' %>
+          <% category = Category.find_by(id: @category_id) %>
+          <% if category %>
+            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
+              <%= t('filters.category_label') %> <%= category.name %>
+              <%= link_to requests_path(params.to_unsafe_h.except('category_id')), class: "ml-1.5 text-purple-600 hover:text-purple-900" do %>
+                <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              <% end %>
+            </span>
+          <% end %>
+        <% end %>
+        
+        <% if @time_period.present? && @time_period != 'all' %>
+          <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
+            <%= t('filters.time_label') %> <%= t("filters.#{@time_period}") %>
+            <%= link_to requests_path(params.to_unsafe_h.merge('time_period' => 'all')), class: "ml-1.5 text-yellow-600 hover:text-yellow-900" do %>
+              <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            <% end %>
+          </span>
+        <% end %>
+        
+        <% if @region.present? %>
+          <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+            <%= t('filters.region_label') %> <%= t("regions.#{@region}", default: @region) %>
+            <%= link_to requests_path(params.to_unsafe_h.except('region')), class: "ml-1.5 text-green-600 hover:text-green-900" do %>
+              <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            <% end %>
+          </span>
+        <% end %>
+        
+        <% if @city.present? %>
+          <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800 border border-teal-200">
+            <%= t('filters.city_label') %> <%= @city %>
+            <%= link_to requests_path(params.to_unsafe_h.except('city')), class: "ml-1.5 text-teal-600 hover:text-teal-900" do %>
+              <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            <% end %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Statistics Summary -->
+  <% if @stats.present? && @stats[:total] > 0 %>
+    <div class="mt-6 pt-6 border-t border-gray-200">
+      <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        <%= t('filters.statistics') %>
+      </p>
+      <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600 dark:text-gray-400"><%= t('filters.total_found') %></span>
+          <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400"><%= @stats[:total] %></span>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

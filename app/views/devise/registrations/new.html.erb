@@ -1,0 +1,51 @@
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100"><%= t('devise.registrations.new.title') %></h2>
+  </div>
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div>
+        <%= f.label :username, t('devise.registrations.new.username'), class: "block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" %>
+        <div class="mt-2">
+          <%= f.text_field :username, autofocus: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :email, t('devise.registrations.new.email'), class: "block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" %>
+        <div class="mt-2">
+          <%= f.email_field :email, autocomplete: "email", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :password, t('devise.registrations.new.password'), class: "block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" %>
+        <% if @minimum_password_length %>
+        <em class="text-xs text-gray-500 dark:text-gray-400">(<%= @minimum_password_length %> <%= t('devise.registrations.new.password_min') %>)</em>
+        <% end %><br />
+        <div class="mt-2">
+          <%= f.password_field :password, autocomplete: "new-password", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :password_confirmation, t('devise.registrations.new.password_confirmation'), class: "block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" %>
+        <div class="mt-2">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.submit t('devise.registrations.new.sign_up'), class: "flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      </div>
+    <% end %>
+
+    <p class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
+      <%= t('devise.registrations.new.already_member') %>
+      <%= link_to t('devise.registrations.new.log_in'), new_session_path(resource_name), class: "font-semibold leading-6 text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300" %>
+    </p>
+  </div>
+</div>

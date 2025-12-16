@@ -1,0 +1,46 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">
+      Ответ Администратору (<%= @recipient.username %>)
+    </h1>
+
+    <% if @reply_to_message %>
+      <div class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-6">
+        <p class="text-sm font-medium text-gray-500">
+          В ответ на:
+        </p>
+        <p class="text-sm text-gray-700 italic mt-2">
+          "<%= @reply_to_message.body %>"
+        </p>
+      </div>
+    <% end %>
+
+    <%= form_with(model: @admin_message, url: admin_messages_path, class: "space-y-4") do |f| %>
+      <% if @admin_message.errors.any? %>
+        <div class="bg-red-50 border-l-4 border-red-400 p-4">
+          <h2 class="font-bold text-red-800">Обнаружены ошибки:</h2>
+          <ul class="list-disc list-inside text-sm text-red-700">
+            <% @admin_message.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= f.hidden_field :recipient_id, value: @recipient.id %>
+
+      <div>
+        <%= f.label :body, "Ваше сообщение:", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_area :body, 
+            rows: 6, 
+            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500",
+            placeholder: "Напишите ваш ответ..." %>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <%= f.submit "Отправить ответ", class: "px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 cursor-pointer" %>
+        <%= link_to "Отмена", admin_messages_path, class: "text-sm text-gray-600" %>
+      </div>
+    <% end %>
+  </div>
+</div>

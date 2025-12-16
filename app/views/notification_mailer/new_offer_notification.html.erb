@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+      .header { background-color: #4F46E5; color: white; padding: 20px; text-align: center; }
+      .content { background-color: #f9f9f9; padding: 30px; }
+      .button { display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+      .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📬 New Offer on Your Request</h1>
+      </div>
+      
+      <div class="content">
+        <h2>Hello, <%= @request.user.username %>!</h2>
+        
+        <p><strong><%= @offer.user.username %></strong> has made an offer on your request:</p>
+        
+        <h3><%= @request.title %></h3>
+        
+        <% if @offer.message.present? %>
+          <p><strong>Message:</strong></p>
+          <blockquote><%= @offer.message %></blockquote>
+        <% end %>
+        
+        <a href="<%= request_url(id: @request.id) %>" class="button">View Request</a>
+        
+        <p>You can accept or reject this offer from your request page.</p>
+      </div>
+      
+      <div class="footer">
+        <p>This is an automated notification from Sawab</p>
+      </div>
+    </div>
+  </body>
+</html>

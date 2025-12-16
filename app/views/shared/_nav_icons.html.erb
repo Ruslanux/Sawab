@@ -1,0 +1,71 @@
+<div class="flex items-center space-x-1">
+  <!-- Notifications -->
+  <div data-controller="notifications"
+       data-notifications-user-id-value="<%= current_user.id %>"
+       data-notifications-count-value="<%= current_user.unread_notifications_count || 0 %>"
+       class="relative"
+       data-action="click@window->notifications#closeDropdown">
+
+    <button data-action="click->notifications#toggleDropdown"
+            class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none">
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+
+      <% count = current_user.unread_notifications_count %>
+      <% if count&.positive? %>
+        <span data-notifications-target="counter"
+              id="notifications_counter"
+              class="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full min-w-[1.25rem]">
+          <%= count %>
+        </span>
+      <% end %>
+    </button>
+
+    <div data-notifications-target="dropdown"
+         class="hidden fixed left-4 right-4 top-16 md:absolute md:left-auto md:right-0 md:top-auto md:mt-2 md:w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl z-50 border border-gray-200 dark:border-gray-700">
+      <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100"><%= t('nav.notifications_title') %></h3>
+        <%= link_to t('nav.mark_all_read'),
+                    mark_all_as_read_notifications_path,
+                    data: { turbo_method: :patch },
+                    class: "text-xs text-blue-600 hover:text-blue-800" %>
+      </div>
+      <div data-notifications-target="list" id="notifications_list" class="max-h-96 overflow-y-auto">
+        <% if current_user.notifications&.any? %>
+          <%= render current_user.notifications.recent.limit(5) %>
+        <% else %>
+          <div class="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+            <%= t('nav.no_notifications') %>
+          </div>
+        <% end %>
+      </div>
+      <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+        <%= link_to t('nav.all_notifications'), notifications_path,
+            class: "block text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Messages -->
+  <%
+    inbox_path = if current_user.staff?
+                   admin_admin_messages_path
+                 else
+                   admin_messages_path
+                 end
+    admin_messages_count = current_user.unread_admin_messages_count
+  %>
+  <%= link_to inbox_path, class: "relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none", title: t('nav.admin_messages_title') do %>
+    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+    </svg>
+
+    <% if admin_messages_count&.positive? %>
+      <span class="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full min-w-[1.25rem]">
+        <%= admin_messages_count %>
+      </span>
+    <% end %>
+  <% end %>
+</div>

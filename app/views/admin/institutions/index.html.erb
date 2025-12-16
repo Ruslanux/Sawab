@@ -1,0 +1,154 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+      <%= t('admin.institutions.index.title') %>
+    </h1>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
+      <div class="text-sm text-gray-500 dark:text-gray-400"><%= t('admin.institutions.index.total') %></div>
+      <div class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= @institutions.total_count %></div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
+      <div class="text-sm text-gray-500 dark:text-gray-400"><%= t('admin.institutions.index.verified') %></div>
+      <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400"><%= @verified_count %></div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
+      <div class="text-sm text-gray-500 dark:text-gray-400"><%= t('admin.institutions.index.pending') %></div>
+      <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400"><%= @pending_count %></div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border border-gray-200 dark:border-gray-700">
+    <%= form_with url: admin_institutions_path, method: :get, local: true, class: "flex flex-wrap gap-4" do %>
+      <div class="flex-1 min-w-[200px]">
+        <%= text_field_tag :q, params[:q],
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white",
+            placeholder: t('admin.institutions.index.search_placeholder') %>
+      </div>
+      <div>
+        <%= select_tag :verified,
+            options_for_select([
+              [t('admin.institutions.index.all_statuses'), ''],
+              [t('admin.institutions.index.verified_only'), 'true'],
+              [t('admin.institutions.index.pending_only'), 'false']
+            ], params[:verified]),
+            class: "px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" %>
+      </div>
+      <div>
+        <%= select_tag :institution_type,
+            options_for_select(
+              [[t('admin.institutions.index.all_types'), '']] +
+              Institution.institution_types.keys.map { |type| [t("institutions.types.#{type}"), type] },
+              params[:institution_type]
+            ),
+            class: "px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" %>
+      </div>
+      <%= submit_tag t('filters.apply_filters'),
+          class: "px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 cursor-pointer" %>
+    <% end %>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            <%= t('admin.institutions.index.name') %>
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            <%= t('admin.institutions.index.type') %>
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            <%= t('admin.institutions.index.location') %>
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            <%= t('admin.institutions.index.status') %>
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            <%= t('admin.institutions.index.requests') %>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @institutions.each do |institution| %>
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                <%= link_to institution.name, admin_institution_path(institution), class: "hover:text-indigo-600 dark:hover:text-indigo-400" %>
+              </div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">
+                <%= institution.director_name %>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                <%= t("institutions.types.#{institution.institution_type}") %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                <%= institution.city %>, <%= t("regions.#{institution.region}", default: institution.region) %>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <% if institution.verified? %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+                  <%= t('institutions.verified') %>
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                  <%= t('institutions.pending_verification') %>
+                </span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+              <%= institution.requests.count %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if @institutions.total_pages > 1 %>
+    <div class="mt-6 flex items-center justify-between">
+      <div class="text-sm text-gray-700 dark:text-gray-300">
+        <%= t('pagination.showing') %>
+        <span class="font-medium"><%= @institutions.offset_value + 1 %></span>
+        <%= t('pagination.to') %>
+        <span class="font-medium"><%= [@institutions.offset_value + @institutions.limit_value, @institutions.total_count].min %></span>
+        <%= t('pagination.of') %>
+        <span class="font-medium"><%= @institutions.total_count %></span>
+      </div>
+      <div class="flex space-x-2">
+        <% if @institutions.first_page? %>
+          <span class="px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg cursor-not-allowed">
+            <%= t('pagination.previous') %>
+          </span>
+        <% else %>
+          <%= link_to t('pagination.previous'), admin_institutions_path(page: @institutions.current_page - 1, q: params[:q], verified: params[:verified], institution_type: params[:institution_type]),
+              class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600" %>
+        <% end %>
+
+        <span class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 dark:bg-indigo-700 border border-indigo-600 dark:border-indigo-700 rounded-lg">
+          <%= @institutions.current_page %> / <%= @institutions.total_pages %>
+        </span>
+
+        <% if @institutions.last_page? %>
+          <span class="px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg cursor-not-allowed">
+            <%= t('pagination.next') %>
+          </span>
+        <% else %>
+          <%= link_to t('pagination.next'), admin_institutions_path(page: @institutions.current_page + 1, q: params[:q], verified: params[:verified], institution_type: params[:institution_type]),
+              class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
