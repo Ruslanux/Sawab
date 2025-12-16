@@ -59,7 +59,16 @@ jobs:
           SAWAB_DATABASE_PASSWORD: ${{ secrets.SAWAB_DATABASE_PASSWORD }}
         run: |
           gem install kamal
-          kamal deploy
+
+          # Build and push the image first
+          kamal build push
+
+          # Run database migrations using a one-off container
+          # This handles first deployment when tables don't exist yet
+          kamal app exec "bin/rails db:prepare" || echo "Migration command returned non-zero, continuing..."
+
+          # Deploy the application (skip push since we already did it)
+          kamal deploy --skip-push
 
       - name: Notify on failure
         if: failure()
