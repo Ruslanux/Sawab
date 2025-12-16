@@ -2,12 +2,7 @@
 service: sawab
 
 # Name of the container image.
-# TODO: Replace with your Docker Hub username or registry path
-# Examples:
-#   - Docker Hub: username/sawab
-#   - GitHub Container Registry: ghcr.io/username/sawab
-#   - DigitalOcean: registry.digitalocean.com/your-registry/sawab
-image: your-user/sawab
+image: ruslanux/sawab
 
 # Deploy to these servers.
 # TODO: Replace with your server IP address(es)
@@ -33,8 +28,7 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  # TODO: Replace with your domain
-  host: app.example.com
+  host: sawabapp.org
   # Health check configuration
   healthcheck:
     path: /up
@@ -43,12 +37,7 @@ proxy:
 
 # Credentials for your image host.
 registry:
-  # Specify the registry server, if you're not using Docker Hub
-  # server: registry.digitalocean.com
-  # server: ghcr.io
-
-  # TODO: Replace with your Docker Hub/registry username
-  username: your-user
+  username: ruslanux
 
   # Always use an access token rather than real password when possible.
   password:
@@ -64,8 +53,7 @@ env:
     # ============================================
     # APPLICATION SETTINGS
     # ============================================
-    # TODO: Set your production domain (without https://)
-    APP_HOST: app.example.com
+    APP_HOST: sawabapp.org
 
     # ============================================
     # DATABASE SETTINGS
