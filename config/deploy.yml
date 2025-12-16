@@ -54,8 +54,9 @@ env:
     # ============================================
     # DATABASE SETTINGS
     # ============================================
-    DB_HOST: 65.108.56.69
-    DATABASE_URL: "postgres://sawab:${SAWAB_DATABASE_PASSWORD}@65.108.56.69:5432/sawab_production"
+    # Use the container name for docker network communication
+    DB_HOST: sawab-db
+    DATABASE_URL: "postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production"
 
     # ============================================
     # EMAIL SETTINGS
@@ -150,3 +151,5 @@ accessories:
         - SAWAB_DATABASE_PASSWORD
     directories:
       - data:/var/lib/postgresql/data
+    options:
+      network: kamal
