@@ -80,15 +80,16 @@ jobs:
 
             echo "Step 4: Running database migrations..."
             # Write migration script to avoid shell escaping issues
-            cat > /tmp/run_migrations.sh << 'SCRIPT'
-            docker run --rm --network kamal \
-              -e DATABASE_URL="$1" \
-              -e RAILS_MASTER_KEY="$2" \
-              -e RAILS_ENV=production \
-              -e SOLID_QUEUE_IN_PUMA=false \
-              ruslanux/sawab:latest \
-              bin/rails db:prepare 2>&1
-            SCRIPT
+            cat > /tmp/run_migrations.sh << 'EOF'
+#!/bin/bash
+docker run --rm --network kamal \
+  -e DATABASE_URL="$1" \
+  -e RAILS_MASTER_KEY="$2" \
+  -e RAILS_ENV=production \
+  -e SOLID_QUEUE_IN_PUMA=false \
+  ruslanux/sawab:latest \
+  bin/rails db:prepare 2>&1
+EOF
             chmod +x /tmp/run_migrations.sh
 
             # Copy script to server and run with proper arguments
