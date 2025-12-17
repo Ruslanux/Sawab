@@ -79,7 +79,22 @@ jobs:
             ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker pull ruslanux/sawab:latest"
 
             echo "Step 4: Running database migrations..."
-            ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker run --rm --network kamal -e DATABASE_URL='postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production?sslmode=disable' -e RAILS_MASTER_KEY='${RAILS_MASTER_KEY}' -e RAILS_ENV=production -e SOLID_QUEUE_IN_PUMA=false ruslanux/sawab:latest bin/rails db:prepare"
+            # Write migration script to avoid shell escaping issues
+            cat > /tmp/run_migrations.sh << 'SCRIPT'
+            docker run --rm --network kamal \
+              -e DATABASE_URL="$1" \
+              -e RAILS_MASTER_KEY="$2" \
+              -e RAILS_ENV=production \
+              -e SOLID_QUEUE_IN_PUMA=false \
+              ruslanux/sawab:latest \
+              bin/rails db:prepare 2>&1
+            SCRIPT
+            chmod +x /tmp/run_migrations.sh
+
+            # Copy script to server and run with proper arguments
+            scp -o StrictHostKeyChecking=no /tmp/run_migrations.sh root@${SERVER_IP}:/tmp/
+            ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "bash /tmp/run_migrations.sh 'postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production?sslmode=disable' '${RAILS_MASTER_KEY}'"
+            echo "Migration step completed"
 
             echo "Step 5: Deploying application..."
             kamal deploy --skip-push
