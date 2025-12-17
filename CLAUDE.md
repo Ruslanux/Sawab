@@ -2,6 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+
 ## Project Overview
 
 **Sawab** is a Ruby on Rails 8.0.3 mutual aid/help exchange platform where users can post requests for help and offer assistance to others. The platform includes a virtual currency system ("sawab" points), real-time messaging, notifications, reviews, badges, and an admin panel for moderation.
