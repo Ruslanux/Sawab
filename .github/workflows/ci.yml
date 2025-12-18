@@ -90,6 +90,9 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # REDIS_URL: redis://localhost:6379/0
+          # Dummy OAuth credentials for testing (enables omniauth routes)
+          GOOGLE_CLIENT_ID: test-client-id
+          GOOGLE_CLIENT_SECRET: test-client-secret
         run: bin/rails db:test:prepare test test:system
 
       - name: Keep screenshots from failed system tests
