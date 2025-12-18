@@ -3,7 +3,8 @@ class User < ApplicationRecord
   include Reportable
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :trackable, :confirmable, :lockable
+         :recoverable, :rememberable, :validatable, :trackable, :confirmable, :lockable,
+         :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   # Cached counters for notifications and admin messages
   cached_counter :unread_notifications, association: :notifications, scope: :unread
@@ -134,6 +135,31 @@ class User < ApplicationRecord
   scope :staff, -> { where(role: [ "admin", "moderator" ]) }
   scope :active, -> { where("last_sign_in_at > ?", 30.days.ago) }
   scope :inactive, -> { where("last_sign_in_at < ? OR last_sign_in_at IS NULL", 30.days.ago) }
+
+  # OmniAuth - find or create user from OAuth provider
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0, 20]
+      user.username = generate_unique_username(auth.info.name || auth.info.email.split("@").first)
+      user.avatar_url = auth.info.image
+      user.confirmed_at = Time.current # Skip email confirmation for OAuth users
+    end
+  end
+
+  # Generate unique username from OAuth name
+  def self.generate_unique_username(base_name)
+    username = base_name.parameterize(separator: "_")
+    username = username[0, 20] # Truncate to 20 chars
+
+    return username unless exists?(username: username)
+
+    # Add random suffix if username exists
+    loop do
+      new_username = "#{username[0, 16]}_#{rand(1000..9999)}"
+      return new_username unless exists?(username: new_username)
+    end
+  end
 
   private
 

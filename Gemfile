@@ -20,6 +20,10 @@ gem "tailwindcss-rails"
 gem "jbuilder"
 # Devise authentication solution
 gem "devise"
+# OmniAuth for social login (Google, etc.)
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 # Pundit authorization solution
 gem "pundit"
 # Pagination solution

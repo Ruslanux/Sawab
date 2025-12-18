@@ -70,17 +70,13 @@ Rails.application.configure do
   # Asset host for emails (images, etc.)
   config.action_mailer.asset_host = "https://#{ENV.fetch('APP_HOST', 'localhost')}"
 
-  # SMTP configuration - credentials stored in Rails credentials
-  # Run: EDITOR=nano bin/rails credentials:edit
-  # Add:
-  #   smtp:
-  #     user_name: your_smtp_username
-  #     password: your_smtp_password
+  # SMTP configuration - using environment variables for flexibility
+  # Supports: Brevo (Sendinblue), SendGrid, Mailgun, etc.
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    user_name: Rails.application.credentials.dig(:smtp, :user_name),
-    password: Rails.application.credentials.dig(:smtp, :password),
-    address: ENV.fetch("SMTP_ADDRESS", "smtp.sendgrid.net"),
+    user_name: ENV.fetch("SMTP_USERNAME", nil),
+    password: ENV.fetch("SMTP_PASSWORD", nil),
+    address: ENV.fetch("SMTP_ADDRESS", "smtp-relay.brevo.com"),
     port: ENV.fetch("SMTP_PORT", 587).to_i,
     authentication: :plain,
     enable_starttls_auto: true,

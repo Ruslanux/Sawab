@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
+  # OmniAuth callbacks must be outside the locale scope
+  devise_for :users, only: :omniauth_callbacks, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+
   scope "(:locale)", locale: /en|kk|ru/ do
-    devise_for :users
+    devise_for :users, skip: :omniauth_callbacks
 
     root "requests#index"
 

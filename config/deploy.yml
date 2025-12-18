@@ -44,6 +44,12 @@ env:
   secret:
     - RAILS_MASTER_KEY
     - SAWAB_DATABASE_PASSWORD
+    # SMTP credentials (Brevo/SendGrid/etc)
+    - SMTP_USERNAME
+    - SMTP_PASSWORD
+    # Google OAuth credentials
+    - GOOGLE_CLIENT_ID
+    - GOOGLE_CLIENT_SECRET
 
   clear:
     # ============================================
@@ -62,10 +68,10 @@ env:
     # ============================================
     # EMAIL SETTINGS
     # ============================================
-    # SMTP server address (default: SendGrid)
-    # SMTP_ADDRESS: smtp.sendgrid.net
-    # SMTP_PORT: 587
-    # MAILER_SENDER: noreply@sawab.com
+    # Using Brevo (Sendinblue) - 300 free emails/day
+    SMTP_ADDRESS: smtp-relay.brevo.com
+    SMTP_PORT: 587
+    MAILER_SENDER: "noreply@sawabapp.org"
 
     # ============================================
     # STORAGE SETTINGS
