@@ -34,6 +34,8 @@ class UserProfilesTest < ApplicationSystemTestCase
 
     click_button I18n.t("users.edit.update")
 
+    # Wait for redirect to profile page and check for success message or updated name
+    assert_current_path user_path(username: "UpdatedUsername", locale: :ru), wait: 5
     assert_text "UpdatedUsername"
   end
 
