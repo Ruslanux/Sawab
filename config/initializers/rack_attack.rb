@@ -58,7 +58,12 @@ class Rack::Attack
   # Block requests from known bad IPs (add IPs to Rails.cache with prefix 'blocked_ip:')
   # Example: Rails.cache.write("blocked_ip:1.2.3.4", true, expires_in: 1.day)
   blocklist("block bad ips") do |req|
-    Rack::Attack.cache.read("blocked_ip:#{req.ip}")
+    begin
+      Rack::Attack.cache.read("blocked_ip:#{req.ip}")
+    rescue ActiveRecord::StatementInvalid, PG::UndefinedTable
+      # Cache table doesn't exist yet - allow request
+      false
+    end
   end
 
   ### Custom Throttle Response ###

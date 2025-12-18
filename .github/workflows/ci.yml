@@ -167,8 +167,17 @@ jobs:
             echo "Step 3: Pulling image on server..."
             ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker pull ruslanux/sawab:latest"
 
-            echo "Step 4: Running database migrations..."
-            printf '%s\n' '#!/bin/bash' 'docker run --rm --network kamal \' '  -e DATABASE_URL="$1" \' '  -e RAILS_MASTER_KEY="$2" \' '  -e RAILS_ENV=production \' '  -e SOLID_QUEUE_IN_PUMA=false \' '  ruslanux/sawab:latest \' '  bin/rails db:prepare 2>&1' > /tmp/run_migrations.sh
+            echo "Step 4: Running database migrations and loading Solid schemas..."
+            cat > /tmp/run_migrations.sh << 'SCRIPT'
+            #!/bin/bash
+            docker run --rm --network kamal \
+              -e DATABASE_URL="$1" \
+              -e RAILS_MASTER_KEY="$2" \
+              -e RAILS_ENV=production \
+              -e SOLID_QUEUE_IN_PUMA=false \
+              ruslanux/sawab:latest \
+              bin/rails db:prepare db:schema:load:cache db:schema:load:queue db:schema:load:cable 2>&1
+            SCRIPT
             chmod +x /tmp/run_migrations.sh
             scp -o StrictHostKeyChecking=no /tmp/run_migrations.sh root@${SERVER_IP}:/tmp/
             ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "bash /tmp/run_migrations.sh 'postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production?sslmode=disable' '${RAILS_MASTER_KEY}'"

@@ -63,20 +63,20 @@ production:
       statement_timeout: <%= ENV.fetch("DB_STATEMENT_TIMEOUT", "30000") %>
       idle_in_transaction_session_timeout: <%= ENV.fetch("DB_IDLE_TRANSACTION_TIMEOUT", "60000") %>
 
-  # Solid Cache database (can use same connection as primary)
+  # Solid Cache database (uses same database as primary for simplicity)
   cache:
     <<: *primary_production
-    database: <%= ENV.fetch("DB_CACHE_NAME", "sawab_production_cache") %>
+    database: <%= ENV.fetch("DB_CACHE_NAME") { ENV.fetch("DB_NAME", "sawab_production") } %>
     migrations_paths: db/cache_migrate
 
-  # Solid Queue database (can use same connection as primary)
+  # Solid Queue database (uses same database as primary for simplicity)
   queue:
     <<: *primary_production
-    database: <%= ENV.fetch("DB_QUEUE_NAME", "sawab_production_queue") %>
+    database: <%= ENV.fetch("DB_QUEUE_NAME") { ENV.fetch("DB_NAME", "sawab_production") } %>
     migrations_paths: db/queue_migrate
 
-  # Solid Cable database (can use same connection as primary)
+  # Solid Cable database (uses same database as primary for simplicity)
   cable:
     <<: *primary_production
-    database: <%= ENV.fetch("DB_CABLE_NAME", "sawab_production_cable") %>
+    database: <%= ENV.fetch("DB_CABLE_NAME") { ENV.fetch("DB_NAME", "sawab_production") } %>
     migrations_paths: db/cable_migrate
