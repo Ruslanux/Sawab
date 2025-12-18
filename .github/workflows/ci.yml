@@ -167,8 +167,8 @@ jobs:
             echo "Step 3: Pulling image on server..."
             ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker pull ruslanux/sawab:latest"
 
-            echo "Step 4: Running database migrations and loading Solid schemas..."
-            ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker run --rm --network kamal -e DATABASE_URL='postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production?sslmode=disable' -e RAILS_MASTER_KEY='${RAILS_MASTER_KEY}' -e RAILS_ENV=production -e SOLID_QUEUE_IN_PUMA=false -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ruslanux/sawab:latest bin/rails db:prepare db:schema:load:cache db:schema:load:queue db:schema:load:cable"
+            echo "Step 4: Running database migrations..."
+            ssh -o StrictHostKeyChecking=no root@${SERVER_IP} "docker run --rm --network kamal -e DATABASE_URL='postgres://sawab:${SAWAB_DATABASE_PASSWORD}@sawab-db:5432/sawab_production?sslmode=disable' -e RAILS_MASTER_KEY='${RAILS_MASTER_KEY}' -e RAILS_ENV=production -e SOLID_QUEUE_IN_PUMA=false ruslanux/sawab:latest bin/rails db:prepare"
             echo "Migration step completed"
 
             echo "Step 5: Deploying application..."
