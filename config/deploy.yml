@@ -68,10 +68,10 @@ env:
     # ============================================
     # EMAIL SETTINGS
     # ============================================
-    # Using Google Workspace SMTP - 500 free emails/day
+    # Using Gmail SMTP - 500 free emails/day
     SMTP_ADDRESS: smtp.gmail.com
     SMTP_PORT: 587
-    MAILER_SENDER: "Sawab <info@sawab.kz>"
+    MAILER_SENDER: "Sawab <zhubanov1090@gmail.com>"
 
     # ============================================
     # STORAGE SETTINGS
