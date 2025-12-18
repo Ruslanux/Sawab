@@ -25,7 +25,7 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
   # Use environment variable for flexibility across environments
-  config.mailer_sender = ENV.fetch("MAILER_SENDER", "noreply@sawab.com")
+  config.mailer_sender = ENV.fetch("MAILER_SENDER", "noreply@sawabapp.org")
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'

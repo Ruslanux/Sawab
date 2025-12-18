@@ -68,10 +68,10 @@ env:
     # ============================================
     # EMAIL SETTINGS
     # ============================================
-    # Using Brevo (Sendinblue) - 300 free emails/day
-    SMTP_ADDRESS: smtp-relay.brevo.com
+    # Using Gmail SMTP - 500 free emails/day
+    SMTP_ADDRESS: smtp.gmail.com
     SMTP_PORT: 587
-    MAILER_SENDER: "noreply@sawabapp.org"
+    MAILER_SENDER: "${SMTP_USERNAME}"
 
     # ============================================
     # STORAGE SETTINGS

@@ -70,13 +70,13 @@ Rails.application.configure do
   # Asset host for emails (images, etc.)
   config.action_mailer.asset_host = "https://#{ENV.fetch('APP_HOST', 'localhost')}"
 
-  # SMTP configuration - using environment variables for flexibility
-  # Supports: Brevo (Sendinblue), SendGrid, Mailgun, etc.
+  # SMTP configuration - using Gmail SMTP
+  # Requires: Google account with 2FA and App Password
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     user_name: ENV.fetch("SMTP_USERNAME", nil),
     password: ENV.fetch("SMTP_PASSWORD", nil),
-    address: ENV.fetch("SMTP_ADDRESS", "smtp-relay.brevo.com"),
+    address: ENV.fetch("SMTP_ADDRESS", "smtp.gmail.com"),
     port: ENV.fetch("SMTP_PORT", 587).to_i,
     authentication: :plain,
     enable_starttls_auto: true,
