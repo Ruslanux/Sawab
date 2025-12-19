@@ -162,10 +162,10 @@
   <% end %>
 
   <!-- Submit -->
-  <div class="flex justify-end gap-4">
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4">
     <%= link_to t('common.cancel'), institutions_path,
-        class: "px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition" %>
+        class: "w-full sm:w-auto text-center px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition" %>
     <%= f.submit institution.new_record? ? t('institutions.form.create') : t('institutions.form.update'),
-        class: "px-6 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition cursor-pointer" %>
+        class: "w-full sm:w-auto px-6 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition cursor-pointer" %>
   </div>
 <% end %>
