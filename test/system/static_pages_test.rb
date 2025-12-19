@@ -38,7 +38,7 @@ class StaticPagesTest < ApplicationSystemTestCase
     visit root_path(locale: :ru)
 
     within "footer" do
-      assert_text "info@sawab.kz"
+      assert_text "info@sawabapp.org"
     end
   end
 
