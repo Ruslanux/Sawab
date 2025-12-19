@@ -11,9 +11,11 @@ Ruby version: 3.4.4
 Database: PostgreSQL
 Asset pipeline: Propshaft
 Frontend: Hotwire (Turbo + Stimulus) + Tailwind CSS
-Authentication: Devise (with :confirmable and :trackable modules)
+Authentication: Devise (with :confirmable, :trackable, :lockable, :omniauthable modules)
 Authorization: Pundit
 Real-time: Action Cable
+OAuth: Google OAuth2 (omniauth-google-oauth2)
+Email: Gmail SMTP (500 emails/day free)
 
 ## Core Domain Models & Architecture
 
@@ -41,12 +43,14 @@ The application centers around a request-offer lifecycle:
 - `user` (default), `admin`, `moderator`
 - Helper methods: `admin?`, `moderator?`, `staff?`
 - Features: sawab_balance (virtual currency), profile_picture (Active Storage), banned_at/banned_reason, phone
+- OAuth fields: `provider`, `uid`, `avatar_url` (for Google OAuth users)
 - Has multiple association types: requests, offers, conversations_as_asker, conversations_as_helper, reviews_written, reviews_received, notifications, admin_messages, institutions (through institution_members)
-- Devise modules: :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :trackable, :confirmable, :lockable
+- Devise modules: :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :trackable, :confirmable, :lockable, :omniauthable
 - Lockable config: 5 max attempts, 1 hour unlock, email unlock link
 - Profile picture validation: JPEG/PNG/GIF/WebP only, max 5MB
 - Scopes: `admins`, `moderators`, `regular_users`, `staff`, `active`, `inactive`
 - Cached counters: `unread_notifications_count`, `unread_admin_messages_count` (with 5-minute TTL)
+- OAuth: `User.from_omniauth(auth)` creates/finds user from OAuth data, auto-confirms email
 
 **User Profile Management** (UsersController):
 - `GET /profile/edit` - edit own profile form
@@ -188,6 +192,54 @@ All services inherit from `ApplicationService` (app/services/application_service
   - `paginate(scope, per_page: 20)` - Uses Kaminari pagination
   - `filter_by_status`, `filter_by_category`, `filter_by_search`, `filter_by_role`, `filter_by_user_status`
 - **Admin::ResourceLoader** - Resource loading helpers for admin controllers
+
+## Authentication & Email
+
+### Google OAuth Configuration
+OAuth is configured in `config/initializers/devise.rb` and `config/initializers/omniauth.rb`:
+- Provider: `:google_oauth2`
+- Scopes: `email,profile`
+- Callback URL: `/users/auth/google_oauth2/callback` (outside locale scope)
+- CSP: `form_action` allows `accounts.google.com` for OAuth redirects
+
+**Key files:**
+- `config/initializers/devise.rb:280` - OmniAuth provider config
+- `config/initializers/omniauth.rb` - CSRF protection and full_host config
+- `config/initializers/content_security_policy.rb:17` - CSP form-action
+- `app/controllers/users/omniauth_callbacks_controller.rb` - Handles OAuth callbacks
+- `app/models/user.rb:140` - `from_omniauth` method
+
+**Routes structure** (config/routes.rb):
+```ruby
+# OAuth callbacks OUTSIDE locale scope (Google returns to fixed URL)
+devise_for :users, only: :omniauth_callbacks, controllers: { ... }
+
+scope "(:locale)" do
+  devise_for :users, skip: :omniauth_callbacks  # Regular Devise routes
+end
+```
+
+### Email Configuration (Gmail SMTP)
+Production email uses Gmail SMTP (500 emails/day free limit).
+
+**Environment variables** (set in GitHub Secrets & .kamal/secrets):
+- `SMTP_USERNAME` - Gmail address
+- `SMTP_PASSWORD` - Gmail App Password (16 chars, no spaces)
+- `SMTP_ADDRESS` - smtp.gmail.com
+- `SMTP_PORT` - 587
+
+**Mailer config** in `config/environments/production.rb`:
+- Delivery method: `:smtp`
+- Default from: `ENV["MAILER_SENDER"]`
+- Host: `ENV["APP_HOST"]`
+
+### Email Features
+- **Registration confirmation**: Required for email signup, skipped for OAuth
+- **Password reset**: Via email link
+- **Resend confirmation**: `/users/confirmation/new`
+- **Account unlock**: Via email after 5 failed login attempts
+
+See `docs/AUTHENTICATION_GUIDE.md` for full setup instructions.
 
 ## Localization
 
@@ -348,11 +400,14 @@ See config/database.yml:81-98
 
 ## Key Files & Locations
 
-- **Routes**: config/routes.rb - note the `scope '(:locale)'` wrapper around most routes
+- **Routes**: config/routes.rb - note the `scope '(:locale)'` wrapper around most routes, OAuth callbacks are outside locale scope
 - **Favicon**: public/favicon.svg - SVG favicon linked in both layouts
 - **ApplicationController**: app/controllers/application_controller.rb
   - Includes Pundit, authentication, ban checking, locale setting
   - `check_if_banned` before_action signs out banned users
+- **OAuth Controller**: app/controllers/users/omniauth_callbacks_controller.rb
+- **OAuth Config**: config/initializers/omniauth.rb - CSRF and request method settings
+- **CSP Config**: config/initializers/content_security_policy.rb - includes Google for OAuth
 - **User model validations**: username uniqueness (case-insensitive), sawab_balance >= 0
 - **Request status validation**: Must be one of: open, in_progress, completed, cancelled, pending_completion, disputed
 - **Offer accept logic**: Use `Offers::AcceptService` for full workflow with notifications. Direct `offer.accept!` available for basic functionality
@@ -482,6 +537,26 @@ Kamal is configured for deployment (see .kamal/ directory and Gemfile).
 ```bash
 kamal setup     # Initial setup
 kamal deploy    # Deploy application
+kamal console   # Rails console on production
+kamal logs -f   # Tail production logs
 ```
 
 Thruster gem provides HTTP caching and X-Sendfile for production.
+
+### Documentation
+- `docs/DEPLOYMENT_GUIDE.md` - Full deployment guide (server setup, CI/CD, secrets)
+- `docs/AUTHENTICATION_GUIDE.md` - Authentication setup (Gmail SMTP, Google OAuth)
+
+### Required GitHub Secrets
+| Secret | Description |
+|--------|-------------|
+| `DOCKERHUB_USERNAME` | Docker Hub username |
+| `DOCKERHUB_TOKEN` | Docker Hub access token |
+| `SSH_PRIVATE_KEY` | SSH key for server access |
+| `SERVER_IP` | Production server IP |
+| `RAILS_MASTER_KEY` | Rails credentials key |
+| `SAWAB_DATABASE_PASSWORD` | PostgreSQL password |
+| `SMTP_USERNAME` | Gmail address |
+| `SMTP_PASSWORD` | Gmail App Password |
+| `GOOGLE_CLIENT_ID` | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret |
