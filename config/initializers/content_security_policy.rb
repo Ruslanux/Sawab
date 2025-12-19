@@ -14,7 +14,7 @@ Rails.application.configure do
     policy.style_src   :self, :https, :unsafe_inline
     policy.frame_src   :self
     policy.base_uri    :self
-    policy.form_action :self
+    policy.form_action :self, "https://accounts.google.com"
 
     # Allow WebSocket connections for Action Cable
     if Rails.env.development?
