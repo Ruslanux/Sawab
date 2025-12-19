@@ -125,6 +125,10 @@ kk:
     messages:
       invalid_content_type: "%{acceptable} түріндегі файл болуы керек"
       file_size_too_large: "файл өлшемі %{max_size} аспауы керек"
+      not_saved:
+        one: "%{resource} сақталмады: 1 қате"
+        other: "%{resource} сақталмады: %{count} қате"
+      already_confirmed: "әлдеқашан расталған, кіруді көріңіз"
 
   # Жалпы аудармалар
   hello: "Сәлем, әлем"

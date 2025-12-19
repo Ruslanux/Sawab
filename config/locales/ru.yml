@@ -149,6 +149,10 @@ ru:
     messages:
       invalid_content_type: "должен быть файлом типа %{acceptable}"
       file_size_too_large: "размер файла не должен превышать %{max_size}"
+      not_saved:
+        one: "Не удалось сохранить %{resource}: 1 ошибка"
+        other: "Не удалось сохранить %{resource}: %{count} ошибок"
+      already_confirmed: "уже подтверждён, попробуйте войти"
 
   # Общие переводы
   hello: "Привет, мир"

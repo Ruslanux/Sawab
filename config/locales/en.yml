@@ -125,6 +125,10 @@ en:
     messages:
       invalid_content_type: "must be a file of type %{acceptable}"
       file_size_too_large: "file size must not exceed %{max_size}"
+      not_saved:
+        one: "Could not save %{resource}: 1 error"
+        other: "Could not save %{resource}: %{count} errors"
+      already_confirmed: "was already confirmed, please try signing in"
 
   # General translations
   hello: "Hello world"
