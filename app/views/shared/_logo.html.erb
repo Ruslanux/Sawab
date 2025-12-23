@@ -1,0 +1,47 @@
+<%# Logo component with icon and text %>
+<%# Usage: render 'shared/logo', size: :default | :small | :large %>
+<% size ||= :default %>
+<%
+  case size
+  when :small
+    icon_size = "h-6 w-6"
+    text_size = "text-lg"
+    gap = "gap-1.5"
+  when :large
+    icon_size = "h-10 w-10"
+    text_size = "text-3xl"
+    gap = "gap-3"
+  else # :default
+    icon_size = "h-8 w-8"
+    text_size = "text-2xl"
+    gap = "gap-2"
+  end
+%>
+
+<%= link_to root_path, class: "flex items-center #{gap} group" do %>
+  <div class="<%= icon_size %> relative">
+    <svg viewBox="0 0 32 32" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background circle with gradient -->
+      <defs>
+        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#6366F1"/>
+          <stop offset="100%" style="stop-color:#8B5CF6"/>
+        </linearGradient>
+      </defs>
+      <rect width="32" height="32" rx="8" fill="url(#logoGradient)" class="group-hover:opacity-90 transition-opacity"/>
+      <!-- Heart symbol (sawab/good deed) -->
+      <path d="M16 8C13 8 11 10.2 11 12.8c0 4.5 5 7.7 5 7.7s5-3.2 5-7.7C21 10.2 19 8 16 8z"
+            fill="#EC4899" class="group-hover:scale-110 origin-center transition-transform"/>
+      <!-- Hands reaching up -->
+      <path d="M16 22v3M13 23.5h6"
+            stroke="white" stroke-width="1.5" stroke-linecap="round"
+            class="group-hover:translate-y-0.5 transition-transform"/>
+      <!-- Sparkle/blessing dots -->
+      <circle cx="9" cy="10" r="1" fill="white" opacity="0.7"/>
+      <circle cx="23" cy="10" r="1" fill="white" opacity="0.7"/>
+    </svg>
+  </div>
+  <span class="<%= text_size %> font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent group-hover:from-indigo-700 group-hover:to-purple-700 dark:group-hover:from-indigo-300 dark:group-hover:to-purple-300 transition-all">
+    Sawab
+  </span>
+<% end %>

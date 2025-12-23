@@ -154,6 +154,7 @@ en:
 
   # Navigation and common elements
   nav:
+    home: "Home"
     requests: "Requests"
     leaderboard: "Leaderboard"
     new_request: "New Request"

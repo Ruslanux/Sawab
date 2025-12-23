@@ -200,9 +200,7 @@
                   <span class="px-2 py-1 rounded-full <%= status_class %> font-medium">
                     <%= t("request_status.#{req.status}") %>
                   </span>
-                  <span class="px-2 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 font-medium">
-                    <%= req.category.name %>
-                  </span>
+                  <%= category_badge(req.category.name, size: :small) %>
                   <span class="text-gray-500 dark:text-gray-400">
                     <%= time_ago_in_words(req.created_at) %> <%= t('users.profile.ago') %>
                   </span>
