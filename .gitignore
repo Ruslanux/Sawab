@@ -37,3 +37,5 @@
 !/app/assets/builds/.keep
 CLAUDE.md
 docs/
+post.md
+prompt.md
