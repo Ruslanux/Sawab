@@ -1,216 +1,201 @@
 # Sawab
 
-Платформа взаимопомощи, объединяющая людей для добрых дел. Пользователи могут создавать запросы о помощи и предлагать свою поддержку другим.
+Mutual aid platform connecting people for good deeds. Users can create help requests and offer support to others.
 
-## О проекте
+**Live:** [sawabapp.org](https://sawabapp.org)
 
-**Sawab** (араб. "благое дело") — это веб-приложение для организации взаимопомощи. Платформа позволяет:
+## About
 
-- Создавать запросы о помощи с описанием ситуации
-- Предлагать помощь другим пользователям
-- Общаться в реальном времени через встроенный чат
-- Получать виртуальные баллы (Sawab) за оказанную помощь
-- Оставлять отзывы и оценки
-- Зарабатывать значки за достижения
+**Sawab** (Arabic: "good deed") is a web application for organizing mutual assistance. The platform allows:
 
-### Особенности
+- Creating help requests with detailed descriptions
+- Offering help to other users
+- Real-time communication via built-in chat
+- Earning virtual points (Sawab) for provided assistance
+- Leaving reviews and ratings
+- Earning achievement badges
 
-- **Институциональные запросы** — верифицированные организации (детские дома, дома престарелых, благотворительные фонды) могут создавать запросы от имени подопечных
-- **Система модерации** — жалобы, предупреждения, блокировки для поддержания качества сообщества
-- **Мультиязычность** — поддержка русского, казахского и английского языков
-- **Геолокация** — фильтрация запросов по регионам Казахстана
+### Key Features
 
-## Технологии
+- **Institutional Requests** — Verified organizations (orphanages, nursing homes, charitable foundations) can create requests on behalf of their beneficiaries
+- **Moderation System** — Reports, warnings, and bans to maintain community quality
+- **Multi-language** — Support for Russian, Kazakh, and English
+- **Geolocation** — Filter requests by regions of Kazakhstan
 
-- **Ruby** 3.4.4
-- **Rails** 8.0.3
-- **PostgreSQL** — основная база данных
-- **Hotwire** (Turbo + Stimulus) — интерактивность без SPA
-- **Tailwind CSS** — стилизация
-- **Action Cable** — WebSocket для реального времени
-- **Devise** — аутентификация
-- **Pundit** — авторизация
-- **Kaminari** — пагинация
+## Tech Stack
 
-## Требования
+| Layer | Technology |
+|-------|------------|
+| **Backend** | Ruby 3.4.4, Rails 8.0.3 |
+| **Database** | PostgreSQL 14+ |
+| **Frontend** | Hotwire (Turbo + Stimulus), Tailwind CSS |
+| **Real-time** | Action Cable (WebSocket) |
+| **Authentication** | Devise |
+| **Authorization** | Pundit |
+| **Pagination** | Kaminari |
+| **Code Quality** | RuboCop, Brakeman |
+| **Deployment** | Kamal 2.x, Docker |
 
-- Ruby 3.4.4
-- PostgreSQL 14+
-- Node.js 18+ (для сборки assets)
-- Bundler
-
-## Установка
-
-### 1. Клонирование репозитория
-
-```bash
-git clone https://github.com/your-username/sawab.git
-cd sawab
-```
-
-### 2. Установка зависимостей
-
-```bash
-bundle install
-```
-
-### 3. Настройка базы данных
-
-Создайте файл `config/database.yml` на основе примера или используйте переменные окружения:
-
-```bash
-bin/rails db:create
-bin/rails db:migrate
-bin/rails db:seed  # Опционально: загрузка тестовых данных
-```
-
-### 4. Настройка переменных окружения
-
-Создайте файл `.env` или настройте переменные окружения:
-
-```env
-# База данных
-DATABASE_URL=postgresql://user:password@localhost/sawab_development
-
-# Devise
-DEVISE_SECRET_KEY=your-secret-key
-
-# Action Cable (production)
-REDIS_URL=redis://localhost:6379/1
-```
-
-## Запуск
-
-### Режим разработки
-
-```bash
-bin/dev
-```
-
-Эта команда запускает Rails сервер и Tailwind CSS watcher параллельно.
-
-Или отдельно:
-
-```bash
-bin/rails server           # Rails сервер на http://localhost:3000
-bin/rails tailwindcss:watch  # Компиляция CSS
-```
-
-### Консоль
-
-```bash
-bin/rails console
-```
-
-## Тестирование
-
-```bash
-bin/rails test                    # Все тесты
-bin/rails test test/models        # Тесты моделей
-bin/rails test test/controllers   # Тесты контроллеров
-```
-
-## Линтинг
-
-```bash
-bin/rubocop        # Проверка стиля кода
-bin/rubocop -a     # Автоисправление
-bin/brakeman       # Проверка безопасности
-```
-
-## Структура проекта
+## Project Structure
 
 ```
 app/
-├── channels/          # Action Cable каналы (чат, уведомления)
+├── channels/          # Action Cable channels (chat, notifications)
 ├── controllers/
-│   ├── admin/         # Админ-панель
-│   └── concerns/      # Общие модули (Filterable, Admin::Filtering)
+│   ├── admin/         # Admin panel
+│   └── concerns/      # Shared modules (Filterable, Admin::Filtering)
 ├── models/
-│   └── concerns/      # Общие модули (TimeFilterable, Statusable, Reportable)
-├── policies/          # Pundit политики авторизации
-├── services/          # Сервисные объекты (Offers::*, Requests::*, NotificationService)
+│   └── concerns/      # Shared modules (TimeFilterable, Statusable, Reportable)
+├── policies/          # Pundit authorization policies
+├── services/          # Service objects (Offers::*, Requests::*, NotificationService)
 ├── views/
 │   ├── layouts/       # application, admin
-│   └── shared/        # Переиспользуемые компоненты
+│   └── shared/        # Reusable components
 └── javascript/
-    └── controllers/   # Stimulus контроллеры
+    └── controllers/   # Stimulus controllers
 
 config/
-├── locales/           # Переводы (ru.yml, en.yml, kk.yml)
-└── routes.rb          # Маршруты с locale scope
+├── locales/           # Translations (ru.yml, en.yml, kk.yml)
+└── routes.rb          # Routes with locale scope
 ```
 
-## Основные сущности
+## Core Entities
 
-### Пользователь (User)
-- Роли: `user`, `moderator`, `admin`
-- Баланс Sawab (виртуальная валюта)
-- Значки за достижения
+### User
+- Roles: `user`, `moderator`, `admin`
+- Sawab balance (virtual currency)
+- Achievement badges
 
-### Запрос (Request)
-- Статусы: `open` → `in_progress` → `pending_completion` → `completed`
-- Альтернативные: `disputed`, `cancelled`
-- Привязка к категории и локации
+### Request
+- Statuses: `open` → `in_progress` → `pending_completion` → `completed`
+- Alternative: `disputed`, `cancelled`
+- Linked to category and location
 
-### Предложение (Offer)
-- Статусы: `pending` → `accepted` / `rejected`
-- При принятии создаётся Conversation для чата
+### Offer
+- Statuses: `pending` → `accepted` / `rejected`
+- On acceptance, creates a Conversation for chat
 
-### Учреждение (Institution)
-- Типы: детский дом, дом престарелых, реабилитационный центр, благотворительный фонд
-- Требует верификации администратором
+### Institution
+- Types: orphanage, nursing home, rehabilitation center, charitable foundation
+- Requires admin verification
 
-## Админ-панель
+## Setup
 
-Доступна по адресу `/admin` для пользователей с ролями `admin` или `moderator`.
+### Requirements
 
-Функции:
-- Управление пользователями (бан, роли)
-- Модерация запросов и предложений
-- Рассмотрение жалоб
-- Верификация учреждений
-- Управление категориями и значками
-- Статистика и дашборд
+- Ruby 3.4.4
+- PostgreSQL 14+
+- Node.js 18+
+- Bundler
 
-## Локализация
-
-Приложение поддерживает три языка:
-- Русский (`ru`) — по умолчанию
-- Казахский (`kk`)
-- Английский (`en`)
-
-Язык выбирается через URL: `/ru/requests`, `/kk/requests`, `/en/requests`
-
-## Развёртывание
-
-Проект настроен для развёртывания через [Kamal](https://kamal-deploy.org/):
+### Installation
 
 ```bash
-kamal setup    # Первоначальная настройка
-kamal deploy   # Развёртывание
+# Clone repository
+git clone https://github.com/Ruslanux/sawab.git
+cd sawab
+
+# Install dependencies
+bundle install
+
+# Setup database
+bin/rails db:create db:migrate db:seed
+
+# Start server
+bin/dev
 ```
 
-### Production база данных
+### Environment Variables
 
-В production используется multi-database setup:
-- `sawab_production` — основная БД
+```bash
+# .env (development)
+DATABASE_URL=postgresql://user:password@localhost/sawab_development
+DEVISE_SECRET_KEY=your-secret-key
+
+# Production
+REDIS_URL=redis://localhost:6379/1
+```
+
+## Development
+
+```bash
+# Start development server (Rails + Tailwind watcher)
+bin/dev
+
+# Or separately
+bin/rails server
+bin/rails tailwindcss:watch
+
+# Rails console
+bin/rails console
+```
+
+## Testing
+
+```bash
+bin/rails test                    # All tests
+bin/rails test test/models        # Model tests
+bin/rails test test/controllers   # Controller tests
+```
+
+## Code Quality
+
+```bash
+bin/rubocop        # Style check
+bin/rubocop -a     # Auto-fix
+bin/brakeman       # Security analysis
+```
+
+## Admin Panel
+
+Available at `/admin` for users with `admin` or `moderator` roles.
+
+Features:
+- User management (ban, roles)
+- Request and offer moderation
+- Report handling
+- Institution verification
+- Category and badge management
+- Statistics dashboard
+
+## Localization
+
+The application supports three languages:
+- Russian (`ru`) — default
+- Kazakh (`kk`)
+- English (`en`)
+
+Language is selected via URL: `/ru/requests`, `/kk/requests`, `/en/requests`
+
+## Deployment
+
+Deployed with [Kamal](https://kamal-deploy.org/):
+
+```bash
+kamal setup    # Initial setup
+kamal deploy   # Deploy
+```
+
+### Production Database
+
+Multi-database setup in production:
+- `sawab_production` — main database
 - `sawab_production_cache` — Solid Cache
 - `sawab_production_queue` — Solid Queue
 - `sawab_production_cable` — Solid Cable
 
-## Вклад в проект
+## Contributing
 
-1. Форкните репозиторий
-2. Создайте ветку для фичи (`git checkout -b feature/amazing-feature`)
-3. Закоммитьте изменения (`git commit -m 'Add amazing feature'`)
-4. Запушьте ветку (`git push origin feature/amazing-feature`)
-5. Откройте Pull Request
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
-## Лицензия
+## License
 
-Этот проект распространяется под лицензией MIT. Подробности в файле [LICENSE](LICENSE).
+MIT License. See [LICENSE](LICENSE) for details.
 
-## Контакты
+---
 
-По вопросам и предложениям создавайте Issue в репозитории.
+Built with Ruby on Rails by [Ruslan Zhubanov](https://github.com/Ruslanux)
