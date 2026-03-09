@@ -60,8 +60,12 @@
     <% end %>
   <% end %>
 
-  <%# Back link %>
-  <%= link_to requests_path, class: "ml-auto text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition" do %>
+  <%# Back link — preserve filters if the user came from the requests index %>
+  <%
+    referer = controller.request.referer.to_s
+    back_url = referer.match?(%r{/(\w{2}/)?requests(\?|$)}) ? referer : requests_path
+  %>
+  <%= link_to back_url, class: "ml-auto text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition" do %>
     <%= t('requests.show.back_to_all') %>
   <% end %>
 </div>

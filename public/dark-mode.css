@@ -404,7 +404,7 @@
 
 /* Turbo progress bar styling */
 .turbo-progress-bar {
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
   position: fixed;
   top: 0;

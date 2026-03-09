@@ -476,6 +476,8 @@ kk:
       password_min: "Кемінде 6 таңба"
       confirm_password: "Жаңа құпия сөзді растаңыз"
       confirm_password_placeholder: "Жаңа құпия сөзді растаңыз"
+      passwords_match: "Құпия сөздер сәйкес келеді"
+      passwords_mismatch: "Құпия сөздер сәйкес келмейді"
       cancel: "Болдырмау"
       update: "Профильді жаңарту"
     destroy:

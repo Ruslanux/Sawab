@@ -476,6 +476,8 @@ en:
       password_min: "Minimum 6 characters"
       confirm_password: "Confirm New Password"
       confirm_password_placeholder: "Confirm new password"
+      passwords_match: "Passwords match"
+      passwords_mismatch: "Passwords do not match"
       cancel: "Cancel"
       update: "Update Profile"
     destroy:

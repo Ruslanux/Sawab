@@ -535,6 +535,8 @@ ru:
       password_min: "Минимум 6 символов"
       confirm_password: "Подтвердите новый пароль"
       confirm_password_placeholder: "Подтвердите новый пароль"
+      passwords_match: "Пароли совпадают"
+      passwords_mismatch: "Пароли не совпадают"
       cancel: "Отмена"
       update: "Обновить профиль"
     destroy:
