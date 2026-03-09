@@ -167,6 +167,7 @@ en:
     notifications: "Notifications"
     messages: "Messages"
     sawab: "Sawab"
+    sawab_tooltip: "Sawab points are earned by helping others. The more you help, the higher your ranking!"
     hello: "Hello"
     notifications_title: "Notifications"
     mark_all_read: "Mark all as read"

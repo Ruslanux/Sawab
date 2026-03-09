@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = ["counter", "dropdown", "list"]
+  static targets = ["counter", "dropdown", "list", "button"]
   static values = { 
     userId: Number,
     count: { type: Number, default: 0 }
@@ -31,12 +31,18 @@ export default class extends Controller {
 
   toggleDropdown(event) {
     event.preventDefault()
-    this.dropdownTarget.classList.toggle("hidden")
+    const isHidden = this.dropdownTarget.classList.toggle("hidden")
+    if (this.hasButtonTarget) {
+      this.buttonTarget.setAttribute("aria-expanded", String(!isHidden))
+    }
   }
 
   closeDropdown(event) {
     if (!this.element.contains(event.target)) {
       this.dropdownTarget.classList.add("hidden")
+      if (this.hasButtonTarget) {
+        this.buttonTarget.setAttribute("aria-expanded", "false")
+      }
     }
   }
 
