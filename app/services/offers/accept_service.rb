@@ -8,9 +8,20 @@ module Offers
     end
 
     def call
+      # Quick pre-check before acquiring lock (better UX for obvious failures)
       return false unless validate_offer
 
       with_transaction do
+        # Pessimistic lock prevents race condition: two concurrent accepts
+        # could both pass the pre-check above, so we re-validate inside
+        # the transaction after acquiring the lock.
+        @locked_request = Request.lock.find(offer.request.id)
+
+        unless @locked_request.open?
+          add_error(I18n.t("offers.errors.request_not_open"))
+          raise ActiveRecord::Rollback
+        end
+
         reject_other_pending_offers
         accept_current_offer
         update_request_status
@@ -31,18 +42,18 @@ module Offers
     end
 
     def reject_other_pending_offers
-      @rejected_offers = offer.request.offers
-                              .includes(:user, :request)
-                              .where(status: "pending")
-                              .where.not(id: offer.id)
-                              .to_a
+      @rejected_offers = @locked_request.offers
+                                        .includes(:user, :request)
+                                        .where(status: "pending")
+                                        .where.not(id: offer.id)
+                                        .to_a
 
       return if @rejected_offers.empty?
 
-      offer.request.offers
-           .where(status: "pending")
-           .where.not(id: offer.id)
-           .update_all(status: "rejected", updated_at: Time.current)
+      @locked_request.offers
+                     .where(status: "pending")
+                     .where.not(id: offer.id)
+                     .update_all(status: "rejected", updated_at: Time.current)
     end
 
     def accept_current_offer
@@ -50,7 +61,7 @@ module Offers
     end
 
     def update_request_status
-      offer.request.update!(status: "in_progress")
+      @locked_request.update!(status: "in_progress")
     end
 
     def send_notifications
