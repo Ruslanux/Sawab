@@ -42,7 +42,7 @@
               </span>
               <%= link_to t('nav.leaderboard'), leaderboards_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition" %>
               <%= link_to t('nav.institutions'), institutions_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition" %>
-              <%= button_to t('nav.sign_out'), destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-md text-sm transition shadow-sm" %>
+              <%= button_to t('nav.sign_out'), destroy_user_session_path, method: :delete, class: "text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 border border-gray-300 dark:border-gray-600 py-1 px-3 rounded-md transition hover:border-red-300 dark:hover:border-red-500 bg-transparent" %>
             <% else %>
               <%= link_to t('nav.sign_up'), new_user_registration_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition" %>
               <%= link_to t('nav.sign_in'), new_user_session_path, class: "bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-bold py-1 px-3 rounded-md text-sm transition shadow-sm" %>

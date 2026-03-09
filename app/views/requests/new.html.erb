@@ -1,4 +1,21 @@
-<div class="container mx-auto px-4 py-8 max-w-2xl">
-  <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6"><%= t('requests.new.title') %></h1>
-  <%= render 'form', help_request: @request %>
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Hero Banner -->
+  <div class="bg-gradient-to-br from-indigo-600 to-purple-600 text-white py-10 px-4">
+    <div class="max-w-2xl mx-auto text-center">
+      <div class="inline-flex items-center justify-center w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-2"><%= t('requests.new.title') %></h1>
+      <p class="text-indigo-100 text-lg"><%= t('requests.new.motivational') %></p>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="max-w-2xl mx-auto px-4 py-8 -mt-2">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+      <%= render 'form', help_request: @request %>
+    </div>
+  </div>
 </div>

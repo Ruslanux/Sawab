@@ -24,7 +24,7 @@
   <% end %>
 
   <!-- Title Field -->
-  <div>
+  <div data-controller="char-counter" data-char-counter-max-value="100">
     <%= form.label :title, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
       <span class="flex items-center">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,8 +36,13 @@
     <%= form.text_field :title,
         class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm #{@request.errors[:title].any? ? 'border-red-300' : ''}",
         placeholder: t('requests.new.title_placeholder'),
-        maxlength: 100 %>
-    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t('requests.new.title_help') %></p>
+        maxlength: 100,
+        "data-char-counter-target": "input",
+        "data-action": "input->char-counter#update" %>
+    <div class="mt-1 flex justify-between items-center">
+      <p class="text-xs text-gray-500 dark:text-gray-400"><%= t('requests.new.title_help') %></p>
+      <p class="text-xs text-gray-400"><span data-char-counter-target="count" class="text-gray-400"></span> <%= t('requests.new.chars_remaining') %></p>
+    </div>
   </div>
 
   <!-- Category Field -->
@@ -57,7 +62,7 @@
   </div>
 
   <!-- Description Field -->
-  <div>
+  <div data-controller="char-counter" data-char-counter-max-value="2000">
     <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
       <span class="flex items-center">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,8 +74,13 @@
     <%= form.text_area :description,
         rows: 5,
         class: "mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm #{@request.errors[:description].any? ? 'border-red-300' : ''}",
-        placeholder: t('requests.new.description_placeholder') %>
-    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t('requests.new.description_help') %></p>
+        placeholder: t('requests.new.description_placeholder'),
+        "data-char-counter-target": "input",
+        "data-action": "input->char-counter#update" %>
+    <div class="mt-1 flex justify-between items-center">
+      <p class="text-xs text-gray-500 dark:text-gray-400"><%= t('requests.new.description_help') %></p>
+      <p class="text-xs text-gray-400"><span data-char-counter-target="count" class="text-gray-400"></span> <%= t('requests.new.chars_remaining') %></p>
+    </div>
   </div>
 
   <!-- Institution Section (only if creating from institution or request has institution) -->
@@ -186,7 +196,8 @@
     <%= link_to t('requests.new.cancel'), requests_path,
         class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition" %>
 
-    <%= form.submit (@request.new_record? ? t('requests.new.create') : 'Update Request'),
-        class: "inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition" %>
+    <%= form.submit (@request.new_record? ? t('requests.new.create') : t('requests.new.update')),
+        class: "inline-flex items-center px-8 py-3 border border-transparent text-base font-bold rounded-xl shadow-md text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform hover:scale-[1.02] cursor-pointer",
+        data: { turbo_submits_with: t('requests.new.creating') } %>
   </div>
 <% end %>

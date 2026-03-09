@@ -241,6 +241,10 @@ ru:
       city_placeholder: "например, Атырау, Актобе, Алматы..."
       cancel: "Отмена"
       create: "Создать запрос"
+      update: "Сохранить изменения"
+      creating: "Создаём запрос..."
+      motivational: "Расскажите, что вам нужно — и сообщество поможет"
+      chars_remaining: "симв. осталось"
 
     form:
       institution_section: "Информация об учреждении"

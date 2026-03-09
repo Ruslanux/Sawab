@@ -218,6 +218,10 @@ en:
       city_placeholder: "e.g., Atyrau, Aktobe, Almaty..."
       cancel: "Cancel"
       create: "Create Request"
+      update: "Save Changes"
+      creating: "Creating request..."
+      motivational: "Tell us what you need — the community is here to help"
+      chars_remaining: "chars left"
 
     show:
       back_to_all: "← Back to all requests"
