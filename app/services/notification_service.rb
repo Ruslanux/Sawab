@@ -178,6 +178,7 @@ class NotificationService
       notification
     rescue => e
       Rails.logger.error "NotificationService: Failed to create #{action} notification: #{e.message}"
+      Rails.logger.debug e.backtrace.first(5).join("\n") if Rails.env.development?
       nil
     end
 
