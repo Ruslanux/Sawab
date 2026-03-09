@@ -30,7 +30,8 @@ class Institution < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :director_name, presence: true, length: { maximum: 255 }
   validates :description, length: { maximum: 5000 }
-  validates :website, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]) }, allow_blank: true
+  WEBSITE_REGEXP = /\Ahttps?:\/\/.+\z/
+  validates :website, format: { with: WEBSITE_REGEXP }, allow_blank: true
 
   # == Scopes ==
   scope :verified, -> { where(verified: true) }

@@ -42,14 +42,12 @@ class ConversationsController < ApplicationController
   def mark_message_notifications_as_read
     return unless @conversation
 
-    message_ids = @conversation.messages.pluck(:id)
-    return if message_ids.empty?
-
+    # Use a subquery instead of pluck to avoid loading all IDs into Ruby
     Notification.where(
       recipient: current_user,
       notifiable_type: "Message",
       action: "new_message",
-      notifiable_id: message_ids,
+      notifiable_id: @conversation.messages.select(:id),
       read_at: nil
     ).update_all(read_at: Time.current)
 
