@@ -4,10 +4,8 @@
 # This file configures OmniAuth behavior for OAuth providers
 
 Rails.application.config.middleware.use OmniAuth::Builder do
-  # Configure origin whitelist for CSRF protection
-  # Allow requests from our application's domain
-  OmniAuth.config.allowed_request_methods = [ :post, :get ]
-  OmniAuth.config.silence_get_warning = true
+  # Only allow POST requests for OAuth to prevent CSRF attacks via GET
+  OmniAuth.config.allowed_request_methods = [ :post ]
 
   # Full host for callbacks (required for correct redirect URIs)
   OmniAuth.config.full_host = lambda do |env|

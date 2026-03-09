@@ -385,6 +385,16 @@
   border-color: rgb(67 56 202);
 }
 
+/* Hero CTA button — keep white regardless of dark mode global override */
+.dark .hero-cta-btn {
+  background-color: #ffffff;
+  color: rgb(79 70 229);
+}
+
+.dark .hero-cta-btn:hover {
+  background-color: rgb(238 242 255);
+}
+
 /* Orange colors (disputed) */
 .dark .bg-orange-100 {
   background-color: rgba(234 88 12 / 0.15);
@@ -404,7 +414,7 @@
 
 /* Turbo progress bar styling */
 .turbo-progress-bar {
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
   position: fixed;
   top: 0;

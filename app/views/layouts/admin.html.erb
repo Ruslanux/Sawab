@@ -128,7 +128,7 @@
               Badges
             <% end %>
 
-            <%= link_to admin_institutions_path, class: "group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors #{request.path.include?('institutions') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}", "aria-current": request.path.include?('institutions') ? "page" : nil do %>
+            <%= link_to admin_institutions_path, class: "group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors #{controller_name == 'institutions' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}", "aria-current": controller_name == 'institutions' ? "page" : nil do %>
               <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>

@@ -133,8 +133,15 @@ class Admin::UsersController < Admin::BaseController
     params.require(:user).permit(:role, :sawab_balance)
   end
 
+  ALLOWED_ROLES = %w[user admin moderator].freeze
+
   def authorize_role_change!
     new_role = params.dig(:user, :role)
+
+    unless ALLOWED_ROLES.include?(new_role)
+      redirect_to admin_users_path, alert: "Invalid role: #{new_role}."
+      return
+    end
 
     unless current_user.admin?
       redirect_to admin_users_path, alert: "Only admins can change user roles."

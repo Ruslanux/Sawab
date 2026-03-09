@@ -228,7 +228,7 @@ class RequestsController < ApplicationController
   # МЕТОДЫ ФИЛЬТРАЦИИ ДЛЯ ЗАПРОСОВ
   # ============================================
   def apply_request_filters
-    requests = policy_scope(Request).includes(:offers, :category, :user)
+    requests = policy_scope(Request).includes(:category, :user, offers: :user)
     apply_filters(requests)
   end
 

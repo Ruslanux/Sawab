@@ -101,6 +101,11 @@ class Offer < ApplicationRecord
   # This method provides basic accept functionality for convenience
   def accept!
     transaction do
+      # lock! reloads the record with SELECT FOR UPDATE, preventing race conditions
+      # when two offers are accepted concurrently for the same request
+      request.lock!
+      raise ActiveRecord::RecordInvalid.new(self) unless request.open?
+
       # Reject all other pending offers on this request
       request.offers.pending.where.not(id: id).update_all(
         status: "rejected",

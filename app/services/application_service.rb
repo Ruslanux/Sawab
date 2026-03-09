@@ -65,7 +65,7 @@ class ApplicationService
     ApplicationRecord.transaction(&block)
   rescue ActiveRecord::RecordInvalid => e
     add_error(e.record.errors.full_messages.join(", "))
-  rescue StandardError => e
+  rescue ActiveRecord::RecordNotFound => e
     add_error(e.message)
   end
 end

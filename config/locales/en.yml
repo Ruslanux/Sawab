@@ -167,6 +167,7 @@ en:
     notifications: "Notifications"
     messages: "Messages"
     sawab: "Sawab"
+    sawab_tooltip: "Sawab points are earned by helping others. The more you help, the higher your ranking!"
     hello: "Hello"
     notifications_title: "Notifications"
     mark_all_read: "Mark all as read"
@@ -217,6 +218,11 @@ en:
       city_placeholder: "e.g., Atyrau, Aktobe, Almaty..."
       cancel: "Cancel"
       create: "Create Request"
+      update: "Save Changes"
+      creating: "Creating request..."
+      motivational: "Tell us what you need — the community is here to help"
+      chars_remaining: "chars left"
+      basic_info: "Basic Information"
 
     show:
       back_to_all: "← Back to all requests"
@@ -475,6 +481,8 @@ en:
       password_min: "Minimum 6 characters"
       confirm_password: "Confirm New Password"
       confirm_password_placeholder: "Confirm new password"
+      passwords_match: "Passwords match"
+      passwords_mismatch: "Passwords do not match"
       cancel: "Cancel"
       update: "Update Profile"
     destroy:

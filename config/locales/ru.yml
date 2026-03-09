@@ -190,6 +190,7 @@ ru:
     notifications: "Уведомления"
     messages: "Сообщения"
     sawab: "Саваб"
+    sawab_tooltip: "Баллы Саваб зарабатываются за помощь другим. Чем больше помогаешь — тем выше в рейтинге!"
     hello: "Здравствуйте"
     notifications_title: "Уведомления"
     mark_all_read: "Прочитать все"
@@ -240,6 +241,11 @@ ru:
       city_placeholder: "например, Атырау, Актобе, Алматы..."
       cancel: "Отмена"
       create: "Создать запрос"
+      update: "Сохранить изменения"
+      creating: "Создаём запрос..."
+      motivational: "Расскажите, что вам нужно — и сообщество поможет"
+      chars_remaining: "симв. осталось"
+      basic_info: "Основная информация"
 
     form:
       institution_section: "Информация об учреждении"
@@ -534,6 +540,8 @@ ru:
       password_min: "Минимум 6 символов"
       confirm_password: "Подтвердите новый пароль"
       confirm_password_placeholder: "Подтвердите новый пароль"
+      passwords_match: "Пароли совпадают"
+      passwords_mismatch: "Пароли не совпадают"
       cancel: "Отмена"
       update: "Обновить профиль"
     destroy:
