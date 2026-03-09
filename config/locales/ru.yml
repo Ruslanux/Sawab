@@ -245,6 +245,7 @@ ru:
       creating: "Создаём запрос..."
       motivational: "Расскажите, что вам нужно — и сообщество поможет"
       chars_remaining: "симв. осталось"
+      basic_info: "Основная информация"
 
     form:
       institution_section: "Информация об учреждении"

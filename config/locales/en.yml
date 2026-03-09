@@ -222,6 +222,7 @@ en:
       creating: "Creating request..."
       motivational: "Tell us what you need — the community is here to help"
       chars_remaining: "chars left"
+      basic_info: "Basic Information"
 
     show:
       back_to_all: "← Back to all requests"
