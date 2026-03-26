@@ -20,6 +20,6 @@
 
 <%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? %>
   <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false }, class: "font-semibold leading-6 text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300" %><br />
+    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", send("#{resource_name}_#{provider}_omniauth_authorize_path"), data: { turbo: false }, class: "font-semibold leading-6 text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300" %><br />
   <% end %>
 <% end %>
