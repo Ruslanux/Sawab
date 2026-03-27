@@ -257,7 +257,10 @@ Key translation namespaces:
 - `notifications.messages.*` - All notification message templates with interpolation
 - `regions.*` - Kazakhstan region names (almaty, astana, west_kazakhstan, etc.)
 - `activerecord.errors.messages.*` - Validation error messages (too_short, too_long, blank, etc.)
+- `errors.messages.*` - Devise error messages (not_locked, not_found, already_confirmed, expired, etc.)
 - `institution_types.*` - Institution type labels
+- `devise.*.new.*` - Devise form page titles, labels, buttons (passwords, confirmations, unlocks)
+- `devise.shared.links.*` - Shared Devise navigation links (sign_in, sign_up, forgot_password, etc.)
 
 ### Translation Patterns
 - **Flash messages**: Controllers use `t("controller.flash.action")` pattern
