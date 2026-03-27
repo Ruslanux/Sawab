@@ -1,8 +1,8 @@
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100">Resend confirmation instructions</h2>
+    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100"><%= t('devise.confirmations.new.title') %></h2>
     <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-      Didn't receive the confirmation email? Enter your email address below and we'll send it again.
+      <%= t('devise.confirmations.new.description') %>
     </p>
   </div>
 
@@ -11,17 +11,19 @@
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div>
-        <%= f.label :email, class: "block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" %>
+        <%= f.label :email, t('devise.confirmations.new.email'), class: "block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" %>
         <div class="mt-2">
           <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: "block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
         </div>
       </div>
 
       <div>
-        <%= f.submit "Resend confirmation instructions", class: "flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+        <%= f.submit t('devise.confirmations.new.submit'), class: "flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer" %>
       </div>
     <% end %>
 
-    <%= render "devise/shared/links" %>
+    <div class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
+      <%= render "devise/shared/links" %>
+    </div>
   </div>
 </div>
