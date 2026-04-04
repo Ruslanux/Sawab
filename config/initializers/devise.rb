@@ -277,6 +277,13 @@ Devise.setup do |config|
   # Google OAuth2 configuration
   # Get credentials from Google Cloud Console: https://console.cloud.google.com/apis/credentials
   if ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
+    # Explicitly set path prefix so OmniAuth middleware matches /users/auth/*
+    # Devise clears OmniAuth.config.path_prefix on load and only restores it
+    # during route drawing. The strategy caches request_path on first access,
+    # so if anything triggers it before routes load, the wrong path gets
+    # cached and all OAuth requests fall through to "Authentication passthru".
+    config.omniauth_path_prefix = "/users/auth"
+
     config.omniauth :google_oauth2,
                     ENV["GOOGLE_CLIENT_ID"],
                     ENV["GOOGLE_CLIENT_SECRET"],
@@ -284,7 +291,8 @@ Devise.setup do |config|
                       scope: "email,profile",
                       prompt: "select_account",
                       image_aspect_ratio: "square",
-                      image_size: 200
+                      image_size: 200,
+                      path_prefix: "/users/auth"
                     }
   end
 
